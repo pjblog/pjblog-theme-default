@@ -1,0 +1,15 @@
+import 'antd/dist/antd.css';
+import '../style.less';
+import React from 'react';
+import { Application, PopstateHistoryMode } from '@codixjs/codix';
+import createRouters from '../pages/index';
+import { hydrateRoot } from 'react-dom/client';
+
+const app = new Application(PopstateHistoryMode, import.meta.env.BASE_URL);
+export const routers = createRouters(app);
+const { Bootstrap } = app.build();
+
+hydrateRoot(
+  document.getElementById('root'),
+  <Bootstrap pathes={routers}>404 Not Found</Bootstrap>
+);

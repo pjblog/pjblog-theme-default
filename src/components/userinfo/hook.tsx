@@ -1,0 +1,152 @@
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { getUserInfo, createNewUserInfoState, userLogout, userLogin, userRegister, userProfile, userPassword } from './service';
+import { useAsync, useAsyncCallback, useClient } from '@codixjs/fetch';
+import { useRequestConfigs } from '../request';
+import { redirect, replace } from '@codixjs/codix';
+
+export const UserInfoContext = createContext(createNewUserInfoState());
+
+export function UserInfoProvider(props: React.PropsWithChildren<{}>) {
+  const { data } = useRequestUserInfo();
+  return <UserInfoContext.Provider value={data}>
+    {props.children}
+  </UserInfoContext.Provider>
+}
+
+export function useRequestUserInfo() {
+  const configs = useRequestConfigs();
+  return useAsync(getUserInfo.namespace, () => getUserInfo(configs));
+}
+
+export function useUserInfo() {
+  return useContext(UserInfoContext);
+}
+
+export function useLogout() {
+  const client = useClient();
+  const { loading, execute } = useAsyncCallback(userLogout);
+  const logout = useCallback(() => {
+    return execute().then(() => client.reload(getUserInfo.namespace))
+  }, [execute, client.reload]);
+
+  return {
+    loading,
+    logout,
+  }
+}
+
+export function useLogin() {
+  const client = useClient();
+  const [account, setAccount] = useState<string>(null);
+  const [password, setPassword] = useState<string>(null);
+  const { loading, execute } = useAsyncCallback(userLogin);
+  const submit = useCallback(() => {
+    return execute(account, password)
+      .then(() => client.reload(getUserInfo.namespace));
+  }, [execute, account, password, client.reload]);
+
+  return {
+    account, setAccount,
+    password, setPassword,
+    loading, submit,
+  }
+}
+
+export function useLoginLocation() {
+  return {
+    redirect: useCallback(() =>redirect('/login'), []),
+    replace: useCallback(() => replace('/login'), []),
+  }
+}
+
+export function useRegister() {
+  const client = useClient();
+  const [account, setAccount] = useState<string>(null);
+  const [password, setPassword] = useState<string>(null);
+  const [confirmPassword, setConfirmPassword] = useState<string>(null);
+  const { loading, execute } = useAsyncCallback(userRegister);
+
+  const submit = useCallback(() => {
+    if (!account) return Promise.reject(new Error('请输入账号'));
+    if (!password) return Promise.reject(new Error('请输入密码'));
+    if (password !== confirmPassword) return Promise.reject(new Error('两次输入的密码不一致'));
+    return execute(account, password).then(() => client.reload(getUserInfo.namespace))
+  }, [account, password, confirmPassword, execute, client]);
+
+  return {
+    account, setAccount,
+    password, setPassword,
+    confirmPassword, setConfirmPassword,
+    loading, submit,
+  }
+}
+
+export function useRegisterLocation() {
+  return {
+    redirect: useCallback(() =>redirect('/register'), []),
+    replace: useCallback(() => replace('/register'), []),
+  }
+}
+
+export function useProfile() {
+  const client = useClient();
+  const user = useUserInfo();
+  const [nickname, setNickname] = useState<string>(user.nickname);
+  const [email, setEmail] = useState<string>(user.email);
+  const { loading, execute } = useAsyncCallback(userProfile);
+
+  const submit = useCallback(() => {
+    if (!nickname) return Promise.reject(new Error('请输入昵称'));
+    if (!email) return Promise.reject(new Error('请输入邮箱'));
+    return execute(nickname, email)
+      .then(() => client.reload(getUserInfo.namespace));
+  }, [nickname, email, execute, client]);
+
+  useEffect(() => {
+    setNickname(user.nickname);
+    setEmail(user.email);
+  }, [user.nickname, user.email]);
+
+  return {
+    nickname, setNickname,
+    email, setEmail,
+    loading, submit,
+  }
+}
+
+export function useProfileLocation() {
+  return {
+    redirect: useCallback(() =>redirect('/profile'), []),
+    replace: useCallback(() => replace('/profile'), []),
+  }
+}
+
+export function usePassword() {
+  const client = useClient();
+  const [oldPassword, setOldPassword] = useState<string>(null);
+  const [newPassword, setNewPassword] = useState<string>(null);
+  const [comPassword, setComPassword] = useState<string>(null);
+  const { loading, execute } = useAsyncCallback(userPassword);
+
+  const submit = useCallback(() => {
+    if (!oldPassword) return Promise.reject(new Error('请输入旧密码'));
+    if (!newPassword) return Promise.reject(new Error('请输入新密码'));
+    if (newPassword !== comPassword) return Promise.reject(new Error('两次输入的密码不一致'));
+    return execute(oldPassword, newPassword, comPassword)
+      .then(() => client.reload(getUserInfo.namespace));
+  }, [oldPassword, newPassword, comPassword, execute, client]);
+
+  return {
+    oldPassword, setOldPassword,
+    newPassword, setNewPassword,
+    comPassword, setComPassword,
+    loading, submit,
+  }
+}
+
+export function usePasswordLocation() {
+  return {
+    redirect: useCallback(() =>redirect('/password'), []),
+    replace: useCallback(() => replace('/password'), []),
+  }
+}
