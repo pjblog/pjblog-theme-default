@@ -1,7 +1,12 @@
 {
   "name": "pjblog-theme-default",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "pjblog default theme",
+  "main": "index.js",
+  "files": [
+    "dist/ssr",
+    "index.js"
+  ],
   "scripts": {
     "dev": "vite --host",
     "dev:ssr": "SSR=true vite --host",
