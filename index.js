@@ -7,10 +7,13 @@ module.exports = {
     const { getAssets } = await import('@codixjs/vite');
     const render = await import('./dist/ssr/server/server.mjs');
     const assets = await getAssets('/theme/', 'src/entries/client.tsx', clientDictionary);
-    return (req, res, next) => {
+    return async (ctx, next) => {
+      const req = ctx.req;
+      const res = ctx.res;
       req.HTMLAssets = assets;
       req.HTMLStates = state;
-      render.default.middleware(req, res, next);
+      await new Promise((resolve) => render.default.middleware(req, res, resolve));
+      await next();
     }
   }
 }
