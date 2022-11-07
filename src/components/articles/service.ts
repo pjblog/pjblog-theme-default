@@ -15,6 +15,7 @@ export interface IAricle {
   title: string;
   cover: string;
   ctime: string;
+  readCount: number;
   mtime: string;
   summary: string;
   category: {
@@ -38,6 +39,7 @@ export interface IArticleDetail {
   title: string;
   ctime: Date;
   mtime: Date;
+  readCount: number,
   category: {
     cate_name: string,
     cate_order: number,

@@ -49,8 +49,8 @@ export async function userRegister(account: string, password: string) {
   return res.data;
 }
 
-export async function userProfile(nickname: string, email: string) {
-  const res = await request.put('/user', { nickname, email });
+export async function userProfile(nickname: string, email: string, avatar?: string) {
+  const res = await request.put('/user', { nickname, email, avatar });
   return res.data;
 }
 

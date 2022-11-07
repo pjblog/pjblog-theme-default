@@ -8,6 +8,7 @@ export default function ProfilePage() {
   const {
     nickname, setNickname,
     email, setEmail,
+    avatar, setAvatar,
     loading, submit,
   } = useProfile();
 
@@ -25,6 +26,9 @@ export default function ProfilePage() {
     </Col>
     <Col span={24}>
       <Input value={email} onChange={e => setEmail(e.target.value)} placeholder="邮箱" />
+    </Col>
+    <Col span={24}>
+      <Input value={avatar} onChange={e => setAvatar(e.target.value)} placeholder="头像" />
     </Col>
     <Col span={24}>
       <Button type="primary" onClick={_submit} loading={loading}>保存</Button>

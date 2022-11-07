@@ -12,10 +12,12 @@ export function Article(props: React.PropsWithoutRef<IAricle>) {
       <Typography.Link onClick={() => article.redirect(props.code)}>{props.title}</Typography.Link>
     </Typography.Title>
     <Typography.Paragraph>
-      分类: 
+      分类：
       <Typography.Link onClick={() => home.redirect({ category: props.category.id })}>{props.category.name}</Typography.Link>
       <Divider type="vertical" />
-      发表于 {dayjs(props.ctime).format('YYYY-MM-DD HH:mm')}
+      发表于：{dayjs(props.ctime).format('YYYY-MM-DD HH:mm')}
+      <Divider type="vertical" />
+      阅读量：{props.readCount}
     </Typography.Paragraph>
     <Typography.Paragraph>{props.summary}</Typography.Paragraph>
     {

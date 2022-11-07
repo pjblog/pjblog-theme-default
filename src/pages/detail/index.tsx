@@ -21,6 +21,8 @@ export default function DetailPage() {
       <span>标签：{
         data.tags.map(tag => <Tag key={tag.id} onClick={() => Home.redirect({ tag: tag.id })}>{tag.name}</Tag>)  
       }</span>
+      <Divider type="vertical" />
+      <span>阅读量：{data.readCount}</span>
     </Col>
     <Col span={24}>
       <div dangerouslySetInnerHTML={{
