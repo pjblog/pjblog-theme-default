@@ -6,7 +6,7 @@ const pkg = require('./package.json')
 export default defineConfig(async () => {
   const { default: codixServer } = await import('@codixjs/vite');
   return {
-    base: '/',
+    base: '/theme/',
     resolve: {
       extensions: [
         '.tsx', 

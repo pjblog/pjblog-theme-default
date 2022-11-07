@@ -24,7 +24,9 @@ const port = 8080;
   app.get(prefix + '*', (req, res, next) => {
     req.HTMLAssets = assets;
     req.HTMLStates = {};
-    runner(req, res, next);
+    runner(req, res, matched => {
+      if (!matched) return next();
+    });
   })
   app.listen(port, err => {
     if (err) throw err;
