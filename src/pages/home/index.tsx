@@ -1,11 +1,12 @@
 import React from 'react';
 import styles from './index.module.less';
-import { useArticles, useArticlesLocation, useArticlesQuery } from '../../components';
+import { useArticles, useArticlesLocation, useArticlesQuery, useConfigs } from '../../components';
 import { Spin, Pagination, Row, Col, Divider } from 'antd';
 import { Article } from './article';
 export default function Welcome() {
-  const { page, size } = useArticlesQuery();
+  const { page } = useArticlesQuery();
   const { data, loading } = useArticles();
+  const { article_size } = useConfigs();
   const location = useArticlesLocation();
   return <Row gutter={[24, 24]}>
     <Col span={24}>
@@ -25,9 +26,9 @@ export default function Welcome() {
     <Col span={24}>
       <Pagination 
         current={page} 
-        pageSize={size} 
+        pageSize={article_size} 
         total={data.total} 
-        onChange={(page, size) => location.redirect({ page, size })} 
+        onChange={(page, size) => location.redirect({ page })} 
       />
     </Col>
   </Row>

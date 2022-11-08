@@ -1,19 +1,19 @@
 import React from 'react';
 import styles from 'index.module.less';
 import { Card, Typography } from 'antd';
-import { ILink, useLinkLocation, useLinks } from '../../components';
+import { ILink, useLinks } from '../../components';
 import { PlusOutlined } from '@ant-design/icons';
+import { redirect } from '@codixjs/codix';
 
 export function LinkPannel() {
   const { data } = useLinks(5);
-  const { redirect } = useLinkLocation();
   return <Card title="友情链接" size="small">
     <ul>
       {
         data.map(value => <Item {...value} key={value.id} />)
       }
       <li>
-        <Typography.Link onClick={redirect}><PlusOutlined /> 申请链接...</Typography.Link>
+        <Typography.Link onClick={() => redirect('/link')}><PlusOutlined /> 申请链接...</Typography.Link>
       </li>
     </ul>
   </Card>

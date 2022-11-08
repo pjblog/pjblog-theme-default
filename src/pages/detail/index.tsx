@@ -1,17 +1,18 @@
 import React, { Suspense } from 'react';
 import dayjs from 'dayjs';
-import { useArticle, useArticleLocation, useArticlesLocation, useUserInfo } from '../../components';
+import { useArticle, useArticlesLocation, useUserInfo } from '../../components';
 import styles from './index.module.less';
 import { Row, Col, Typography, Divider, Tag } from 'antd';
 import { Flex } from '../../lib';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 import { Relative } from './relative';
 import { PostCommandBox } from './post-box';
+import { Comments } from './comments';
+import { redirect } from '@codixjs/codix';
 
 export default function DetailPage() {
   const user = useUserInfo();
   const { data } = useArticle();
-  const Article = useArticleLocation();
   const Home = useArticlesLocation();
   return <Row gutter={[24, 12]}>
     <Col span={24}>
@@ -41,7 +42,7 @@ export default function DetailPage() {
         !!data.prev && <Flex block align="left" valign="middle" gap={8}>
           <CaretLeftOutlined />
           <span>上一篇：</span>
-          <Typography.Link onClick={() => Article.redirect(data.prev.code)}>{data.prev.title}</Typography.Link>
+          <Typography.Link onClick={() => redirect('/article/' + data.prev.code)}>{data.prev.title}</Typography.Link>
         </Flex>
       }
     </Col>
@@ -49,7 +50,7 @@ export default function DetailPage() {
       {
         !!data.next && <Flex block align="right" valign="middle" gap={8}>
           <span>下一篇：</span>
-          <Typography.Link onClick={() => Article.redirect(data.next.code)}>{data.next.title}</Typography.Link>
+          <Typography.Link onClick={() => redirect('/article/' + data.next.code)}>{data.next.title}</Typography.Link>
           <CaretRightOutlined />
         </Flex>
       }
@@ -59,10 +60,18 @@ export default function DetailPage() {
         <Relative id={data.id} size={100} />
       </Suspense>
     </Col>
-    {
+    <Col span={24}>
+      <Typography.Title level={5}>评论</Typography.Title>
+    </Col>
+    <Col span={24}>
+      <Suspense fallback="loading...">
+        <Comments id={data.id} />
+      </Suspense>
+    </Col>
+    {/* {
       user.id > 0 && <Col span={24}>
-        <PostCommandBox id={data.id} />
+        <PostCommandBox id={data.id} cid={0} />
       </Col>
-    }
+    } */}
   </Row>
 }

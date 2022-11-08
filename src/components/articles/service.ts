@@ -6,7 +6,6 @@ export interface IArticlesProps {
   tag?: number,
   category?: number,
   page?: number,
-  size?: number,
 }
 
 export interface IAricle {
@@ -74,23 +73,23 @@ export interface TArticlePreview {
   ctime: string | Date
 }
 
-export async function getArticles(options: IArticlesProps = {}, configs: AxiosRequestConfig = {}) {
+export async function getHttpArticles(options: IArticlesProps = {}, configs: AxiosRequestConfig = {}) {
   const res = await request.get<IArticleState>('/article', Object.assign(configs, {
     params: options,
   }));
   return res.data;
 }
 
-getArticles.namespace = 'articles';
+getHttpArticles.namespace = (options: IArticlesProps = {}) => `articles:${options.keyword}:${options.tag || 0}:${options.category || 0}:${options.page || 1}`;
 
-export async function getArticle(id: string, configs: AxiosRequestConfig = {}) {
+export async function getHttpArticle(id: string, configs: AxiosRequestConfig = {}) {
   const res = await request.get<IArticleDetail>('/article/' + id, configs);
   return res.data;
 }
 
-getArticle.namespace = 'article:';
+getHttpArticle.namespace = (id: string) => `article:${id}`;
 
-export async function getRelativeArticles(id: number, size: number = 5, configs: AxiosRequestConfig = {}) {
+export async function getHttpRelativeArticles(id: number, size: number = 5, configs: AxiosRequestConfig = {}) {
   const res = await request.get<TArticlePreview[]>('/article/' + id + '/relative', Object.assign(configs, {
     params: {
       size
@@ -99,4 +98,4 @@ export async function getRelativeArticles(id: number, size: number = 5, configs:
   return res.data;
 }
 
-getRelativeArticles.namespace = 'getRelativeArticles:';
+getHttpRelativeArticles.namespace = (id: number, size: number = 5) => `getRelativeArticles:${id}:${size}`;

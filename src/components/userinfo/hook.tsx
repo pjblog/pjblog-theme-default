@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { getUserInfo, createNewUserInfoState, userLogout, userLogin, userRegister, userProfile, userPassword } from './service';
+import { getHttpUserInfo, createNewUserInfoState, setHttpLogout, setHttpLogin, setHttpRegister, setHttpProfile, setHttpPassword } from './service';
 import { useAsync, useAsyncCallback } from '@codixjs/fetch';
 import { useRequestConfigs } from '../request';
 import { redirect, replace } from '@codixjs/codix';
@@ -20,7 +20,7 @@ export function UserInfoProvider(props: React.PropsWithChildren<{}>) {
 
 export function useRequestUserInfo() {
   const configs = useRequestConfigs();
-  return useAsync(getUserInfo.namespace, () => getUserInfo(configs));
+  return useAsync(getHttpUserInfo.namespace, () => getHttpUserInfo(configs));
 }
 
 export function useUserInfo() {
@@ -33,7 +33,7 @@ export function useUserAction() {
 
 export function useLogout() {
   const { reload } = useUserAction();
-  const { loading, execute } = useAsyncCallback(userLogout);
+  const { loading, execute } = useAsyncCallback(setHttpLogout);
   const logout = useCallback(() => execute().then(reload), [execute, reload]);
 
   return {
@@ -46,7 +46,7 @@ export function useLogin() {
   const { reload } = useUserAction();
   const [account, setAccount] = useState<string>(null);
   const [password, setPassword] = useState<string>(null);
-  const { loading, execute } = useAsyncCallback(userLogin);
+  const { loading, execute } = useAsyncCallback(setHttpLogin);
   const submit = useCallback(
     () => execute(account, password).then(reload), 
     [execute, account, password, reload]
@@ -59,19 +59,12 @@ export function useLogin() {
   }
 }
 
-export function useLoginLocation() {
-  return {
-    redirect: useCallback(() =>redirect('/login'), []),
-    replace: useCallback(() => replace('/login'), []),
-  }
-}
-
 export function useRegister() {
   const { reload } = useUserAction();
   const [account, setAccount] = useState<string>(null);
   const [password, setPassword] = useState<string>(null);
   const [confirmPassword, setConfirmPassword] = useState<string>(null);
-  const { loading, execute } = useAsyncCallback(userRegister);
+  const { loading, execute } = useAsyncCallback(setHttpRegister);
 
   const submit = useCallback(() => {
     if (!account) return Promise.reject(new Error('请输入账号'));
@@ -88,20 +81,13 @@ export function useRegister() {
   }
 }
 
-export function useRegisterLocation() {
-  return {
-    redirect: useCallback(() =>redirect('/register'), []),
-    replace: useCallback(() => replace('/register'), []),
-  }
-}
-
 export function useProfile() {
   const user = useUserInfo();
   const { reload } = useUserAction();
   const [nickname, setNickname] = useState<string>(user.nickname);
   const [email, setEmail] = useState<string>(user.email);
   const [avatar, setAvatar] = useState<string>(user.avatar);
-  const { loading, execute } = useAsyncCallback(userProfile);
+  const { loading, execute } = useAsyncCallback(setHttpProfile);
 
   const submit = useCallback(() => {
     if (!nickname) return Promise.reject(new Error('请输入昵称'));
@@ -123,19 +109,12 @@ export function useProfile() {
   }
 }
 
-export function useProfileLocation() {
-  return {
-    redirect: useCallback(() =>redirect('/profile'), []),
-    replace: useCallback(() => replace('/profile'), []),
-  }
-}
-
 export function usePassword() {
   const { reload } = useUserAction();
   const [oldPassword, setOldPassword] = useState<string>(null);
   const [newPassword, setNewPassword] = useState<string>(null);
   const [comPassword, setComPassword] = useState<string>(null);
-  const { loading, execute } = useAsyncCallback(userPassword);
+  const { loading, execute } = useAsyncCallback(setHttpPassword);
 
   const submit = useCallback(() => {
     if (!oldPassword) return Promise.reject(new Error('请输入旧密码'));
@@ -149,12 +128,5 @@ export function usePassword() {
     newPassword, setNewPassword,
     comPassword, setComPassword,
     loading, submit,
-  }
-}
-
-export function usePasswordLocation() {
-  return {
-    redirect: useCallback(() =>redirect('/password'), []),
-    replace: useCallback(() => replace('/password'), []),
   }
 }

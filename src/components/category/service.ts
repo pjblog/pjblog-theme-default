@@ -10,9 +10,9 @@ export interface ICategory {
   outlink: string,
 }
 
-export async function getCategories(configs: AxiosRequestConfig = {}) {
+export async function getHttpCategories(configs: AxiosRequestConfig = {}) {
   const res = await request.get<ICategory[]>('/category', configs);
   return res.data;
 }
 
-getCategories.namespace = 'categories';
+getHttpCategories.namespace = 'categories';

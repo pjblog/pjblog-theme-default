@@ -7,3 +7,4 @@ export * from './router';
 export * from './category';
 export * from './link';
 export * from './comments';
+export * from './provider';

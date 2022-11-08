@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import { useArticlesLocation, useLoginLocation, usePassword } from '../../components';
+import { usePassword } from '../../components';
 import styles from './index.module.less';
 import { Row, Col, Input, Button, message } from 'antd';
+import { redirect } from '@codixjs/codix';
 
 export default function PasswordPage() {
-  const { redirect } = useLoginLocation();
   const {
     oldPassword, setOldPassword,
     newPassword, setNewPassword,
@@ -15,7 +15,7 @@ export default function PasswordPage() {
   const _submit = useCallback(() => {
     submit()
       .then(() => message.success('修改密码成功,需要重新登录'))
-      .then(() => redirect())
+      .then(() => redirect('/login'))
       .catch(e => {
         switch (e.code) {
           case 406: return message.error('旧密码不匹配');

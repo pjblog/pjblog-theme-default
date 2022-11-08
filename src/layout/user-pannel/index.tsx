@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
 import styles from './index.module.less';
 import { Card, Typography, Avatar, message } from 'antd';
-import { useLoginLocation, useLogout, usePasswordLocation, useProfileLocation, useRegisterLocation, useUserInfo } from '../../components';
+import { useLogout, useUserInfo } from '../../components';
 import { Flex } from '../../lib';
+import { redirect } from '@codixjs/codix';
 
 export function UserPannel() {
   const user = useUserInfo();
@@ -16,12 +17,10 @@ export function UserPannel() {
 }
 
 function NotLogin() {
-  const registerLocation = useRegisterLocation();
-  const loginLocation = useLoginLocation();
   return <ul>
     <li>您还没有登录！</li>
-    <li><Typography.Link onClick={() => loginLocation.redirect()}>登录</Typography.Link></li>
-    <li><Typography.Link onClick={() => registerLocation.redirect()}>注册</Typography.Link></li>
+    <li><Typography.Link onClick={() => redirect('/login')}>登录</Typography.Link></li>
+    <li><Typography.Link onClick={() => redirect('/register')}>注册</Typography.Link></li>
   </ul>
 }
 
@@ -51,21 +50,19 @@ function Logined() {
 }
 
 function Logout() {
-  const logout = useLogout();
+  const { logout, loading } = useLogout();
   const _logout = useCallback(() => {
-    logout.logout()
+    logout()
       .then(() => message.success('退出登录成功'))
       .catch(e => message.error(e.message));
-  }, [logout.logout])
-  return <Typography.Link onClick={_logout} disabled={logout.loading}>退出登录</Typography.Link>;
+  }, [logout])
+  return <Typography.Link onClick={_logout} disabled={loading}>退出登录</Typography.Link>;
 }
 
 function Profile() {
-  const { redirect } = useProfileLocation();
-  return <Typography.Link onClick={redirect}>修改资料</Typography.Link>;
+  return <Typography.Link onClick={() => redirect('/profile')}>修改资料</Typography.Link>;
 }
 
 function Password() {
-  const { redirect } = usePasswordLocation();
-  return <Typography.Link onClick={redirect}>修改密码</Typography.Link>;
+  return <Typography.Link onClick={() => redirect('/password')}>修改密码</Typography.Link>;
 }

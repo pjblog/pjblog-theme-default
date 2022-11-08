@@ -8,7 +8,7 @@ import { CategoryPannel } from './category-pannel';
 import { LinkPannel } from './link-pannel';
 
 export function Layout(props: React.PropsWithChildren<{}>) {
-  const { data } = useConfigs();
+  const data = useConfigs();
   if (data.close) return <Close />;
   return <div className={styles.container}>
     <div className={styles.headbar}>
@@ -22,7 +22,9 @@ export function Layout(props: React.PropsWithChildren<{}>) {
       </Col>
       <Col span={7}>
         <Row gutter={[24, 24]}>
-          <Col span={24}><UserPannel /></Col>
+          <Col span={24}>
+            <UserPannel />
+          </Col>
           <Col span={24}>
             <Suspense fallback="loading...">
               <CategoryPannel />

@@ -27,34 +27,34 @@ export function createNewUserInfoState(): IUserInfoState {
   }
 }
 
-export async function getUserInfo(configs: AxiosRequestConfig = {}) {
+export async function getHttpUserInfo(configs: AxiosRequestConfig = {}) {
   const res = await request.get<IUserInfoState>('/me', configs);
   return res.data;
 }
 
-getUserInfo.namespace = 'userinfo';
+getHttpUserInfo.namespace = 'userinfo';
 
-export async function userLogout() {
+export async function setHttpLogout() {
   const res = await request.delete('/logout');
   return res.data;
 }
 
-export async function userLogin(account: string, password: string) {
+export async function setHttpLogin(account: string, password: string) {
   const res = await request.put('/login', { account, password });
   return res.data;
 }
 
-export async function userRegister(account: string, password: string) {
+export async function setHttpRegister(account: string, password: string) {
   const res = await request.post('/user', { account, password });
   return res.data;
 }
 
-export async function userProfile(nickname: string, email: string, avatar?: string) {
+export async function setHttpProfile(nickname: string, email: string, avatar?: string) {
   const res = await request.put('/user', { nickname, email, avatar });
   return res.data;
 }
 
-export async function userPassword(oldPassword: string, newPassword: string, comPassword: string) {
+export async function setHttpPassword(oldPassword: string, newPassword: string, comPassword: string) {
   const res = await request.put('/me/password', {
     oldPassword, newPassword, comPassword,
   })

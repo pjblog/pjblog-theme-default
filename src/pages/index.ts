@@ -1,7 +1,6 @@
 import { Application, HistoryMode, withImport } from '@codixjs/codix';
 import { Client, ClientProvider } from '@codixjs/fetch';
-import { Suspense } from 'react';
-import { UserInfoProvider, useBlogRouters } from '../components';
+import { useBlogRouters, BlogProvider } from '../components';
 import { Layout } from '../layout';
 
 export default function(app: Application<HistoryMode>) {
@@ -22,9 +21,7 @@ export default function(app: Application<HistoryMode>) {
   }
 
   app.use(ClientProvider, { client });
-  app.use(Suspense, { fallback: 'loading...' });
-  app.use(UserInfoProvider);
-  app.use(Suspense, { fallback: 'loading...' });
+  app.use(BlogProvider, { fallback: 'loading...' });
   app.use(Layout);
 
   Article.use(...withImport(() => import('./home'), { fallback: 'loading...' }));

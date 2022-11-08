@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
-import { useCommentPost } from '../../../components';
+import { IComment, useCommentPost } from '../../../components';
 import { Button, Card, Input, message, Space } from 'antd';
 import e from 'express';
 
-export function PostCommandBox(props: React.PropsWithoutRef<{ id: number }>) {
-  const { text, setText, loading, submit } = useCommentPost(props.id, 0);
+export function PostCommandBox(props: React.PropsWithoutRef<{ id: number, cid: number, onComplete: (data: IComment) => void }>) {
+  const { text, setText, loading, submit } = useCommentPost(props.id, props.cid);
   const _submit = useCallback(() => {
     submit()
+      .then(props.onComplete)
       .then(() => setText(null))
       .then(() => message.success('发表成功'))
       .catch(e => message.error(e.message));

@@ -8,7 +8,7 @@ export interface ILink {
   icon: string,
 }
 
-export async function getLinks(configs: AxiosRequestConfig = {}, size: number = 0) {
+export async function getHttpLinks(configs: AxiosRequestConfig = {}, size: number = 0) {
   if (size) {
     configs.params = {
       size,
@@ -18,7 +18,9 @@ export async function getLinks(configs: AxiosRequestConfig = {}, size: number = 
   return res.data;
 }
 
-export async function addLink(name: string, icon: string, url: string) {
+getHttpLinks.namespace = (size: number = 0) => `links:${size}`
+
+export async function setHttpLink(name: string, icon: string, url: string) {
   const res = await request.post('/link', { name, icon, url });
   return res.data;
 }

@@ -1,15 +1,15 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import styles from './index.module.less';
-import { IAricle, useArticleLocation, useArticlesLocation } from '../../../components';
+import { IAricle, useArticlesLocation } from '../../../components';
 import { Typography, Tag, Divider } from 'antd';
+import { redirect } from '@codixjs/codix';
 
 export function Article(props: React.PropsWithoutRef<IAricle>) {
   const home = useArticlesLocation();
-  const article = useArticleLocation();
   return <div className={styles.article}>
     <Typography.Title level={3}>
-      <Typography.Link onClick={() => article.redirect(props.code)}>{props.title}</Typography.Link>
+      <Typography.Link onClick={() => redirect('/article/' + props.code)}>{props.title}</Typography.Link>
     </Typography.Title>
     <Typography.Paragraph>
       分类：
