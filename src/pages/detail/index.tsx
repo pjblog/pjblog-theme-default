@@ -1,13 +1,15 @@
 import React, { Suspense } from 'react';
 import dayjs from 'dayjs';
-import { useArticle, useArticleLocation, useArticlesLocation } from '../../components';
+import { useArticle, useArticleLocation, useArticlesLocation, useUserInfo } from '../../components';
 import styles from './index.module.less';
 import { Row, Col, Typography, Divider, Tag } from 'antd';
 import { Flex } from '../../lib';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 import { Relative } from './relative';
+import { PostCommandBox } from './post-box';
 
 export default function DetailPage() {
+  const user = useUserInfo();
   const { data } = useArticle();
   const Article = useArticleLocation();
   const Home = useArticlesLocation();
@@ -57,5 +59,10 @@ export default function DetailPage() {
         <Relative id={data.id} size={100} />
       </Suspense>
     </Col>
+    {
+      user.id > 0 && <Col span={24}>
+        <PostCommandBox id={data.id} />
+      </Col>
+    }
   </Row>
 }

@@ -6,3 +6,4 @@ export * from './configs';
 export * from './router';
 export * from './category';
 export * from './link';
+export * from './comments';
