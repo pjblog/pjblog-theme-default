@@ -36,6 +36,15 @@ export function Comments(props: React.PropsWithoutRef<{ id: number }>) {
         })
       }
     }
+    setTimeout(() => {
+      const el = document.getElementById('comm_' + state.id);
+      console.log('el', !!el)
+      if (el) {
+        el.scrollIntoView({
+          behavior: 'smooth'
+        })
+      }
+    }, 300);
   }
   return <Row gutter={[0, 48]}>
     {
@@ -54,7 +63,7 @@ export function Comments(props: React.PropsWithoutRef<{ id: number }>) {
 
 function Item(props: React.PropsWithoutRef<IComment & { aid: number, setState: (state: IComment, rid: number) => void }>) {
   const [open, setOpen] = useState(false);
-  return <Col span={24}>
+  return <Col span={24} id={'comm_' + props.id}>
     <Space direction="vertical">
       <Flex gap={8}>
         <Avatar src={props.user.avatar} size="large" shape="square" />

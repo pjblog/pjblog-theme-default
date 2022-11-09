@@ -16,7 +16,15 @@ export interface IAricle {
   ctime: string;
   readCount: number;
   mtime: string;
+  comments: number;
   summary: string;
+  user: {
+    id: number,
+    account: string,
+    nickname: string,
+    avatar: string,
+    level: number
+  },
   category: {
     id: number;
     name: string;
