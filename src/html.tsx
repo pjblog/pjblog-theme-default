@@ -16,7 +16,7 @@ export default function HTML(props: React.PropsWithChildren<THtmlProps<{
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="description" content={props.state?.blog_description} />
       <meta name="keywords" content={props.state?.blog_keywords} />
-      <meta name="copyright" content={props.state?.blog_keywords} />
+      <meta name="copyright" content={props.state?.blog_copyright} />
       <meta name="blog" content="pjblog" />
       <meta name="theme" content={props.state?.blog_theme} />
       <meta name="renderer" content="webkit" />
