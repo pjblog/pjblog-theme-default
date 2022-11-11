@@ -8,6 +8,9 @@ export interface IConfigState {
   theme: string;
   article_size: number, 
   comment_size: number,
+  keywords: string,
+  copyright: string,
+  icp: string,
 }
 
 export function createDetaultConfigs(): IConfigState {
@@ -18,6 +21,9 @@ export function createDetaultConfigs(): IConfigState {
     theme: 'pjblog-theme-default',
     article_size: 10,
     comment_size: 10,
+    keywords: null,
+    copyright: null,
+    icp: null,
   }
 }
 

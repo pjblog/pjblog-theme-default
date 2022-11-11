@@ -1,13 +1,26 @@
 import React from 'react';
 import { Scripts, PreLoads, Css, THtmlProps } from '@codixjs/server';
 
-export default function HTML(props: React.PropsWithChildren<THtmlProps<{}>>) {
+// https://blog.csdn.net/u012767761/article/details/111149733
+export default function HTML(props: React.PropsWithChildren<THtmlProps<{
+  blog_keywords: string,
+  blog_copyright: string,
+  blog_name: string,
+  blog_description: string,
+  blog_theme: string,
+}>>) {
   return <html lang="en">
     <head>
       <meta charSet="UTF-8" />
       <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Vite App</title>
+      <meta name="description" content={props.state?.blog_description} />
+      <meta name="keywords" content={props.state?.blog_keywords} />
+      <meta name="copyright" content={props.state?.blog_keywords} />
+      <meta name="blog" content="pjblog" />
+      <meta name="theme" content={props.state?.blog_theme} />
+      <meta name="renderer" content="webkit" />
+      <title>{props.state?.blog_name}</title>
       <Scripts dataSource={props.assets.headerScripts} />
       <PreLoads dataSource={props.assets.headerPreloadScripts}/>
       <Css dataSource={props.assets.headerCsses} />

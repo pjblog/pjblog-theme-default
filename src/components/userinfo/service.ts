@@ -9,6 +9,7 @@ export interface IUserInfoState {
   avatar: string,
   forbiden: boolean,
   level: number,
+  website: string,
   gmt_create: string | Date,
   gmt_modified: string | Date,
 }
@@ -22,6 +23,7 @@ export function createNewUserInfoState(): IUserInfoState {
     avatar: null,
     forbiden: false,
     level: 1,
+    website: null,
     gmt_create: new Date(),
     gmt_modified: new Date(),
   }
@@ -49,8 +51,8 @@ export async function setHttpRegister(account: string, password: string) {
   return res.data;
 }
 
-export async function setHttpProfile(nickname: string, email: string, avatar?: string) {
-  const res = await request.put('/user', { nickname, email, avatar });
+export async function setHttpProfile(nickname: string, email: string, avatar?: string, website?: string) {
+  const res = await request.put('/user', { nickname, email, avatar, website });
   return res.data;
 }
 

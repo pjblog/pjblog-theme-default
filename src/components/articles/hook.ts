@@ -38,6 +38,7 @@ export function useArticlesLocation() {
     if (!tag) Reflect.deleteProperty(_params, 'tag');
     if (!keyword) Reflect.deleteProperty(_params, 'keyword');
     if (!page) Reflect.deleteProperty(_params, 'page');
+    if (page === 1) Reflect.deleteProperty(_params, 'page');
     return _params;
   }, [category, tag, keyword, page]);
   return {

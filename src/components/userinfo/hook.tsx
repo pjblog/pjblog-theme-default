@@ -87,24 +87,27 @@ export function useProfile() {
   const [nickname, setNickname] = useState<string>(user.nickname);
   const [email, setEmail] = useState<string>(user.email);
   const [avatar, setAvatar] = useState<string>(user.avatar);
+  const [website, setWebsite] = useState<string>(user.website);
   const { loading, execute } = useAsyncCallback(setHttpProfile);
 
   const submit = useCallback(() => {
     if (!nickname) return Promise.reject(new Error('请输入昵称'));
     if (!email) return Promise.reject(new Error('请输入邮箱'));
-    return execute(nickname, email, avatar).then(reload);
-  }, [nickname, email, execute, avatar, reload]);
+    return execute(nickname, email, avatar, website).then(reload);
+  }, [nickname, email, execute, avatar, website, reload]);
 
   useEffect(() => {
     setNickname(user.nickname);
     setEmail(user.email);
     setAvatar(user.avatar);
-  }, [user.nickname, user.email, user.avatar]);
+    setWebsite(user.website);
+  }, [user.nickname, user.email, user.avatar, user.website]);
 
   return {
     nickname, setNickname,
     email, setEmail,
     avatar, setAvatar,
+    website, setWebsite,
     loading, submit,
   }
 }

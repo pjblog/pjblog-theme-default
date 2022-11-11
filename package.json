@@ -56,5 +56,10 @@
       "/index.html": "/"
     }
   },
-  "manifest": {}
+  "manifest": {},
+  "pjblog": {
+    "type": "theme",
+    "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3SflsXv3RLuu6lANX9MkJP2Ohb3jeLbqXUQ&usqp=CAU",
+    "plugins": {}
+  }
 }

@@ -9,6 +9,7 @@ export default function ProfilePage() {
     nickname, setNickname,
     email, setEmail,
     avatar, setAvatar,
+    website, setWebsite,
     loading, submit,
   } = useProfile();
 
@@ -29,6 +30,9 @@ export default function ProfilePage() {
     </Col>
     <Col span={24}>
       <Input value={avatar} onChange={e => setAvatar(e.target.value)} placeholder="头像" />
+    </Col>
+    <Col span={24}>
+      <Input value={website} onChange={e => setWebsite(e.target.value)} placeholder="网站" />
     </Col>
     <Col span={24}>
       <Button type="primary" onClick={_submit} loading={loading}>保存</Button>
