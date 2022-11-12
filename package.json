@@ -1,6 +1,6 @@
 {
   "name": "pjblog-theme-default",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "pjblog default theme",
   "main": "index.js",
   "files": [
@@ -15,7 +15,8 @@
     "build:client": "KIND=client vite build",
     "build:server": "KIND=server vite build",
     "build:ssr": "npm run build:client && npm run build:server",
-    "start": "coka start 3000"
+    "start": "coka start 3000",
+    "pub": "npm run build && git add . && git commit -am 'update' && git push && npm publish"
   },
   "dependencies": {
     "@codixjs/codix": "^1.0.0",

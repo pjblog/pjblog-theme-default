@@ -8,11 +8,12 @@ export default function HTML(props: React.PropsWithChildren<THtmlProps<{
   blog_name: string,
   blog_description: string,
   blog_theme: string,
+  blog_favicon_url: string,
 }>>) {
   return <html lang="en">
     <head>
       <meta charSet="UTF-8" />
-      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <link rel="icon" type="image/svg+xml" href={props.state?.blog_favicon_url || '/favicon.ico'} />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="description" content={props.state?.blog_description} />
       <meta name="keywords" content={props.state?.blog_keywords} />
