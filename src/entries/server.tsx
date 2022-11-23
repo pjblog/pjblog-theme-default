@@ -6,8 +6,8 @@ export default ServerSiderRender({
   prefix: import.meta.env.BASE_URL,
   html: Html,
   routers: createRouters,
-  onAllReady(req, res, obj) {
+  onAllReady(stream, obj) {
     const client = obj.client;
-    res.write(`<script>window.INITIALIZE_STATE = ${JSON.stringify(client.toJSON())}</script>`);
+    stream.write(`<script>window.INITIALIZE_STATE = ${JSON.stringify(client.toJSON())}</script>`);
   }
 })

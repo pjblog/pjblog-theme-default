@@ -1,6 +1,6 @@
 {
   "name": "pjblog-theme-default",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "pjblog default theme",
   "main": "index.js",
   "files": [
@@ -8,18 +8,16 @@
     "index.js"
   ],
   "scripts": {
-    "dev": "vite --host",
+    "dev": "npm run dev:ssr",
     "dev:ssr": "SSR=true vite --host",
     "build": "rm -rf dist && npm run build:ssr",
-    "build:spa": "KIND=spa vite build",
     "build:client": "KIND=client vite build",
     "build:server": "KIND=server vite build",
     "build:ssr": "npm run build:client && npm run build:server",
-    "start": "coka start 3000",
     "pub": "npm run build && git add . && git commit -am 'update' && git push && npm publish"
   },
   "dependencies": {
-    "@codixjs/codix": "^1.0.0",
+    "@codixjs/codix": "^1.0.14",
     "@codixjs/fetch": "^1.0.0",
     "@codixjs/server": "^1.0.0",
     "antd": "^4.24.1",

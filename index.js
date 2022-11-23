@@ -1,5 +1,6 @@
 const path = require('path');
 const clientDictionary = path.resolve(__dirname, 'dist', 'ssr', 'client');
+const { HttpMovedPermanentlyException, HttpFoundException } = require('@typeservice/exception');
 
 module.exports = {
   static: path.resolve(__dirname, 'dist', 'ssr', 'client'),
@@ -9,11 +10,12 @@ module.exports = {
     const assets = await getAssets(render.default.prefix, 'src/entries/client.tsx', clientDictionary);
     return async (ctx, next) => {
       const req = ctx.req;
-      const res = ctx.res;
       req.HTMLAssets = assets;
       req.HTMLStates = state;
-      await new Promise((resolve) => render.default.middleware(req, res, resolve));
-      await next();
+      const [matched, stream] = render.default.middleware(req);
+      if (!matched) return await next();
+      ctx.set('Content-type', 'text/html; charset=utf-8');
+      ctx.body = stream;
     }
   }
 }

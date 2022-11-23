@@ -24,9 +24,11 @@ const port = 8080;
   app.get(prefix + '*', (req, res, next) => {
     req.HTMLAssets = assets;
     req.HTMLStates = {};
-    runner(req, res, matched => {
-      if (!matched) return next();
-    });
+    const [matched, stream] = runner(req);
+    if (!matched) return next();
+    res.statusCode = 200;
+    res.setHeader("Content-type", "text/html; charset=utf-8");
+    stream.pipe(res);
   })
   app.listen(port, err => {
     if (err) throw err;
@@ -35,4 +37,3 @@ const port = 8080;
 }).catch(e => {
   console.log('发生错误，无法启动服务器:', e.message);
 })
-
