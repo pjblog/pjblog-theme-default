@@ -1,11 +1,12 @@
 {
   "name": "pjblog-theme-default",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "pjblog default theme",
   "main": "index.js",
   "files": [
     "dist/ssr",
-    "index.js"
+    "index.js",
+    "theme.configs.json"
   ],
   "scripts": {
     "dev": "npm run dev:ssr",
