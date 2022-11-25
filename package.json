@@ -1,6 +1,6 @@
 {
   "name": "pjblog-theme-default",
-  "version": "1.0.15",
+  "version": "1.0.17",
   "description": "pjblog default theme",
   "main": "index.js",
   "files": [
