@@ -2,9 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 const pkg = require('./package.json');
 const port = 8000;
-const themeConfigs = {
-  abc: 123456
-}
+const themeConfigs = {};
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
