@@ -1,6 +1,6 @@
 import { ServerSiderRender } from '@codixjs/server';
 import Html from '../html';
-import createRouters from '../pages/index';
+import createRouters from '../pages';
 
 export default ServerSiderRender({
   prefix: import.meta.env.BASE_URL,

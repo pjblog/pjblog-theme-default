@@ -1,41 +1,32 @@
-import React, { useCallback } from 'react';
-import { useArticlesLocation, useProfile } from '../../components';
 import styles from './index.module.less';
-import { Row, Col, Input, Button, message } from 'antd';
-
-export default function ProfilePage() {
-  const articleRedirection = useArticlesLocation();
+import { useProfile, useReloadMyInfo } from '@pjblog/hooks';
+import { Input, Button, Typography, Space, message } from 'antd';
+import { useCallback } from 'react';
+export default function Profile() {
+  const reload = useReloadMyInfo()
   const {
     nickname, setNickname,
     email, setEmail,
     avatar, setAvatar,
     website, setWebsite,
-    loading, submit,
+    execute, loading,
   } = useProfile();
 
-  const _submit = useCallback(() => {
-    submit()
-      .then(() => message.success('更新用户信息成功'))
-      .then(() => articleRedirection.redirect())
+  const submit = useCallback(() => {
+    execute()
+      .then(reload)
+      .then(() => message.success('更新用户资料成功'))
       .catch(e => message.error(e.message));
-  }, [submit, articleRedirection.redirect]);
+  }, [execute, reload])
 
-  return <Row gutter={[0, 24]}>
-    <Col span={24}>更新用户信息</Col>
-    <Col span={24}>
-      <Input value={nickname} onChange={e => setNickname(e.target.value)} placeholder="昵称" />
-    </Col>
-    <Col span={24}>
-      <Input value={email} onChange={e => setEmail(e.target.value)} placeholder="邮箱" />
-    </Col>
-    <Col span={24}>
-      <Input value={avatar} onChange={e => setAvatar(e.target.value)} placeholder="头像" />
-    </Col>
-    <Col span={24}>
-      <Input value={website} onChange={e => setWebsite(e.target.value)} placeholder="网站" />
-    </Col>
-    <Col span={24}>
-      <Button type="primary" onClick={_submit} loading={loading}>保存</Button>
-    </Col>
-  </Row>
+  return <div className={styles.profile}>
+    <Typography.Title level={3}>完善用户资料</Typography.Title>
+    <Space direction="vertical" size={16}>
+      <Input value={nickname} placeholder="昵称" autoFocus onChange={e => setNickname(e.target.value)} style={{ width: 400 }} size="large" />
+      <Input value={email} placeholder="邮箱" autoFocus onChange={e => setEmail(e.target.value)} style={{ width: 400 }} size="large" type="email" />
+      <Input value={avatar} placeholder="头像网络地址" autoFocus onChange={e => setAvatar(e.target.value)} style={{ width: 400 }} size="large" />
+      <Input value={website} placeholder="个人网站" autoFocus onChange={e => setWebsite(e.target.value)} style={{ width: 400 }} size="large" />
+      <Button block type="primary" htmlType="submit" onClick={submit} loading={loading} size="large">保存</Button>
+    </Space>
+  </div>
 }

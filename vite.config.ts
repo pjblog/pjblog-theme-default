@@ -1,6 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-const pkg = require('./package.json')
+const pkg = require('./package.json');
+const port = 8000;
+const themeConfigs = {
+  abc: 123456
+}
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
@@ -30,12 +34,7 @@ export default defineConfig(async () => {
     build: {
       rollupOptions: {
         manualChunks: {
-          vonder: [
-            'react', 
-            'react-dom',
-            'antd',
-            '@ant-design/icons'
-          ],
+          vonder: Object.keys(pkg.dependencies).filter(dep => !dep.startsWith('@types/')),
         }
       }
     },
@@ -51,14 +50,37 @@ export default defineConfig(async () => {
           ],
         }
       }),
-      codixServer(pkg.config)
+      // antdConfigs,
+      codixServer(pkg.config),
+
+      // theme configs mockup
+      {
+        name: 'theme:configs',
+        configureServer(server) {
+          server.middlewares.use((req, res, next) => {
+            if (req.url === '/-/theme/configs' && req.method.toLowerCase() === 'get') {
+              res.setHeader('content-type', 'application/json');
+              res.end(JSON.stringify({
+                status: 200,
+                data: themeConfigs
+              }));
+            } else {
+              next()
+            }
+          })
+        }
+      }
     ],
     server: {
       proxy: {
-        "/api": {
+        "/-": {
           changeOrigin: true,
-          target: "http://127.0.0.1:8000",
-        }
+          target: "http://127.0.0.1:" + port,
+        },
+        "/~": {
+          changeOrigin: true,
+          target: "http://127.0.0.1:" + port,
+        },
       }
     }
   }

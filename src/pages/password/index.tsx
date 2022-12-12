@@ -1,42 +1,33 @@
-import React, { useCallback } from 'react';
-import { usePassword } from '../../components';
 import styles from './index.module.less';
-import { Row, Col, Input, Button, message } from 'antd';
-import { redirect } from '@codixjs/codix';
-
-export default function PasswordPage() {
+import { usePassword, useReloadMyInfo } from '@pjblog/hooks';
+import { Input, Button, Typography, Space, message } from 'antd';
+import { useCallback } from 'react';
+import { usePath } from '../../hooks';
+export default function Password() {
+  const reload = useReloadMyInfo();
+  const LOGIN = usePath('LOGIN');
   const {
-    oldPassword, setOldPassword,
     newPassword, setNewPassword,
+    oldPassword, setOldPassword,
     comPassword, setComPassword,
-    loading, submit,
+    execute, loading,
   } = usePassword();
 
-  const _submit = useCallback(() => {
-    submit()
-      .then(() => message.success('修改密码成功,需要重新登录'))
-      .then(() => redirect('/login'))
-      .catch(e => {
-        switch (e.code) {
-          case 406: return message.error('旧密码不匹配');
-          default: return message.error(e.message);
-        }
-      });
-  }, [submit, redirect]);
+  const submit = useCallback(() => {
+    execute()
+      .then(reload)
+      .then(() => message.success('修改密码成功，您需要重新登录!'))
+      .then(() => LOGIN.redirect())
+      .catch(e => message.error(e.message));
+  }, [execute, reload])
 
-  return <Row gutter={[0, 24]}>
-    <Col span={24}>修改密码</Col>
-    <Col span={24}>
-      <Input type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} placeholder="旧密码" />
-    </Col>
-    <Col span={24}>
-      <Input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="新密码" />
-    </Col>
-    <Col span={24}>
-      <Input type="password" value={comPassword} onChange={e => setComPassword(e.target.value)} placeholder="重复密码" />
-    </Col>
-    <Col span={24}>
-      <Button type="primary" onClick={_submit} loading={loading}>修改</Button>
-    </Col>
-  </Row>
+  return <div className={styles.password}>
+    <Typography.Title level={3}>修改密码</Typography.Title>
+    <Space direction="vertical" size={16}>
+      <Input.Password autoFocus value={oldPassword} placeholder="旧密码" onChange={e => setOldPassword(e.target.value)} style={{ width: 400 }} size="large" />
+      <Input.Password value={newPassword} placeholder="新密码" onChange={e => setNewPassword(e.target.value)} style={{ width: 400 }} size="large" />
+      <Input.Password value={comPassword} placeholder="确认密码" onChange={e => setComPassword(e.target.value)} style={{ width: 400 }} size="large" />
+      <Button block type="primary" htmlType="submit" onClick={submit} loading={loading} size="large">修改</Button>
+    </Space>
+  </div>
 }

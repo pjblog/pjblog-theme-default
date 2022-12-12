@@ -1,3 +1,36 @@
-.sidebar {
-  width: 300px;
+.articles {
+  .meta {
+    display: flex;
+    justify-content: right;
+  }
+  .article {
+    border-bottom: 1px solid #f3f3f3;
+    padding-bottom: 20px;
+    margin-top: 60px;
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 40px;
+      cursor: pointer;
+    }
+    .extras{
+      font-size: 12px;
+      color: #bbb;
+      a{
+        font-size: 12px;
+        &,&:link, &:visited {
+          color: #bbb;
+        }
+        &:hover{
+          color: #000;
+        }
+      }
+      .tag{
+        cursor: pointer;
+        color: #999;
+      }
+    }
+  }
+}
+.page {
+  padding: 40px 0 0 0;
 }

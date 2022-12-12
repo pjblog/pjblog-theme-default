@@ -1,36 +1,33 @@
-import React, { useCallback } from 'react';
-import { useArticlesLocation, useRegister } from '../../components';
 import styles from './index.module.less';
-import { Row, Col, Input, Button, message } from 'antd';
-
-export default function RegisterPaage() {
-  const articleRedirection = useArticlesLocation();
+import { useRegister, useReloadMyInfo } from '@pjblog/hooks';
+import { Input, Button, Typography, Space, message } from 'antd';
+import { useCallback } from 'react';
+import { usePath } from '../../hooks';
+export default function Register() {
+  const HOME = usePath('HOME');
+  const reload = useReloadMyInfo()
   const {
     account, setAccount,
     password, setPassword,
     confirmPassword, setConfirmPassword,
-    loading, submit,
+    execute, loading,
   } = useRegister();
 
-  const _submit = useCallback(() => {
-    submit()
-      .then(() => message.success('注册新用户成功'))
-      .then(() => articleRedirection.redirect())
+  const submit = useCallback(() => {
+    execute()
+      .then(reload)
+      .then(() => message.success('注册成功'))
+      .then(() => HOME.redirect())
       .catch(e => message.error(e.message));
-  }, [submit, articleRedirection.redirect]);
-  return <Row gutter={[0, 24]}>
-    <Col span={24}>注册新用户</Col>
-    <Col span={24}>
-      <Input value={account} onChange={e => setAccount(e.target.value)} placeholder="账号" />
-    </Col>
-    <Col span={24}>
-      <Input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="密码" />
-    </Col>
-    <Col span={24}>
-      <Input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="重复密码" />
-    </Col>
-    <Col span={24}>
-      <Button type="primary" onClick={_submit} loading={loading}>注册</Button>
-    </Col>
-  </Row>
+  }, [execute, reload])
+
+  return <div className={styles.register}>
+    <Typography.Title level={3}>注册新账号</Typography.Title>
+    <Space direction="vertical" size={16}>
+      <Input value={account} placeholder="账号" autoFocus onChange={e => setAccount(e.target.value)} style={{ width: 400 }} size="large" />
+      <Input.Password value={password} placeholder="密码" onChange={e => setPassword(e.target.value)} style={{ width: 400 }} size="large" />
+      <Input.Password value={confirmPassword} placeholder="确认密码" onChange={e => setConfirmPassword(e.target.value)} style={{ width: 400 }} size="large" />
+      <Button block type="primary" htmlType="submit" onClick={submit} loading={loading} size="large">注册</Button>
+    </Space>
+  </div>
 }

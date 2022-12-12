@@ -1,7 +1,6 @@
-import 'antd/dist/antd.css';
 import '../style.less';
 import React from 'react';
-import createNewRouters from '../pages/index';
+import createNewRouters from '../pages';
 import { Application, PopstateHistoryMode } from '@codixjs/codix';
 import { createRoot } from 'react-dom/client';
 

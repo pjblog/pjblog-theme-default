@@ -1,8 +1,7 @@
-import 'antd/dist/antd.css';
 import '../style.less';
 import React from 'react';
 import { Application, PopstateHistoryMode } from '@codixjs/codix';
-import createRouters from '../pages/index';
+import createRouters from '../pages';
 import { hydrateRoot } from 'react-dom/client';
 
 const app = new Application(PopstateHistoryMode, import.meta.env.BASE_URL);
