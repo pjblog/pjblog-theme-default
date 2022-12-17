@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 const pkg = require('./package.json');
-const port = 8000;
+const port = 8866;
 const themeConfigs = {};
 
 // https://vitejs.dev/config/
