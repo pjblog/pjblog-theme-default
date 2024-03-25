@@ -1,0 +1,17 @@
+{
+  "id": 1,
+  "account": "evioshen",
+  "nickname": "沈赟杰",
+  "email": "evio@vip.qq.com",
+  "avatar": "/-/attachment/6",
+  "password": "72237b36d503c5c9da5675955da5d352f37637e7",
+  "salt": "9dtUDQ",
+  "token": "0e29f03ce802a1125cf546983b6af9b1",
+  "forbiden": false,
+  "admin": true,
+  "website": "https://www.pjhome.net",
+  "thirdpart": false,
+  "thirdpart_node_module": null,
+  "gmt_create": "2024-03-25T09:47:04.000Z",
+  "gmt_modified": "2024-03-25T09:47:04.000Z"
+}

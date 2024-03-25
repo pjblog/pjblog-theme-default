@@ -1,0 +1,45 @@
+{
+  "name": "pjblog-theme-default",
+  "version": "2.3.0",
+  "description": "PJBlog 默认主题",
+  "main": "./build/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --loader ts-node/esm src/bootstrap.ts",
+    "preview": "node scripts/preview.mjs",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "rm -rf ./dist && vite build",
+    "build:server": "rm -rf ./build && vite build --ssr",
+    "pub": "npm run build && git add . && git commit -am 'update' && git push && npm publish"
+  },
+  "dependencies": {
+    "@pjblog/blog": "^2.3.6",
+    "@pjblog/vite-middleware": "^2.3.0",
+    "@zille/application": "^1.1.2",
+    "@zille/configurator": "^1.1.2",
+    "@zille/http": "^1.1.2",
+    "@zille/service": "^1.1.2",
+    "crypto-js": "^4.2.0",
+    "koa": "^2.15.2",
+    "koa-connect": "^2.1.0",
+    "koa-send": "^5.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite": "^4.5.3"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/koa": "^2.15.0",
+    "@types/react": "^18.2.69",
+    "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "less": "^4.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3"
+  }
+}

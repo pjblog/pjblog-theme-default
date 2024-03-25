@@ -1,0 +1,27 @@
+{
+  "theme": "pjblog-theme-default",
+  "title": "PJBlog Geek",
+  "description": "Another PJBlog, enjoy it!",
+  "domain": "http://127.0.0.1",
+  "keywords": [
+    "pjblog",
+    "node"
+  ],
+  "close": false,
+  "closeReason": "Website closed",
+  "bodyJSONLimit": 2,
+  "bodyFORMLimit": 10,
+  "swagger": true,
+  "registable": true,
+  "loginExpire": 7,
+  "onlineExpire": 3,
+  "sessionMaxAge": 365,
+  "mediaQueryWithPageSize": 10,
+  "mediaLatestWithSize": 5,
+  "mediaHotWithSize": 5,
+  "mediaCommentable": true,
+  "mediaCommentWithLatestSize": 5,
+  "mediaCommentWithPageSize": 10,
+  "mediaCommentWithChildrenPageSize": 3,
+  "mediaRelativeWithPageSize": 5
+}
