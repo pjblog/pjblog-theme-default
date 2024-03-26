@@ -26,6 +26,7 @@ export default defineConfig({
               rollupOptions: {
                 input: {
                   index: resolve('src/index.ts'),
+                  preview: resolve('src/preview.ts'),
                   html: resolve('src/html.tsx'),
                   home: resolve('src/home/index.tsx'),
                 }

@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { IHtmlProps } from "./vite-env";
+import { IHtmlProps } from "./types";
 
 // vite 专属内容
 const HMRContent = `import RefreshRuntime from '/@react-refresh';RefreshRuntime.injectIntoGlobalHook(window);window.$RefreshReg$ = () => {};window.$RefreshSig$ = () => (type) => type;window.__vite_plugin_react_preamble_installed__ = true;`;

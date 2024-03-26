@@ -6,8 +6,8 @@ import { resolve } from 'node:path';
 import { createRequire } from 'node:module';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server'
-import { BlogMetaDataProvider } from "../blog.server.ts";
-import { IHomePageProps, IHtmlProps } from "../vite-env";
+import { BlogMetaDataProvider } from "../metadata.ts";
+import { IHomePageProps, IHtmlProps } from "../types.ts";
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
 const build = __dirname;

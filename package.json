@@ -5,12 +5,11 @@
   "main": "./build/index.js",
   "type": "module",
   "scripts": {
-    "dev": "node --loader ts-node/esm src/bootstrap.ts",
-    "preview": "node scripts/preview.mjs",
+    "dev": "node --loader ts-node/esm src/serve.ts",
+    "preview": "node build/preview.js",
     "build": "npm run build:client && npm run build:server",
     "build:client": "rm -rf ./dist && vite build",
-    "build:server": "rm -rf ./build && vite build --ssr",
-    "pub": "npm run build && git add . && git commit -am 'update' && git push && npm publish"
+    "build:server": "rm -rf ./build && vite build --ssr"
   },
   "dependencies": {
     "@pjblog/blog": "^2.3.6",
