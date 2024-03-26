@@ -4,6 +4,10 @@
   "description": "PJBlog 默认主题",
   "main": "./build/index.js",
   "type": "module",
+  "files": [
+    "build",
+    "dist"
+  ],
   "scripts": {
     "dev": "node --loader ts-node/esm src/serve.ts",
     "preview": "node build/preview.js",
