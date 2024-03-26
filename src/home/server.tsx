@@ -1,5 +1,5 @@
 import ViteDevServer from "@pjblog/vite-middleware";
-import { HomePage, MediaService, BlogVariable } from "@pjblog/blog";
+import { HomePage, MediaService, BlogVariable, CategoryCache } from "@pjblog/blog";
 import type { IMe } from '@pjblog/blog';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
@@ -37,6 +37,9 @@ export default class MyHomePage extends HomePage {
   @HomePage.Inject(MediaService)
   private readonly media: MediaService;
 
+  @HomePage.Inject(CategoryCache)
+  private readonly categoryCache: CategoryCache;
+
   // 需要渲染的文件
   private readonly dev_file = resolve(__dirname, 'index.tsx');
   private readonly dev_html = resolve(__dirname, '../html.tsx');
@@ -45,23 +48,30 @@ export default class MyHomePage extends HomePage {
   private readonly pro_client = 'src/home/client.tsx';
 
   // 渲染需要提供的数据源
-  public async state(page: number, type: string, category: number): Promise<IHomePageProps> {
+  public async state(data: { page: number, type: string, category: number, url: string }): Promise<IHomePageProps> {
     const size = this.configs.get('mediaQueryWithPageSize');
-    const res = await this.media.getMany(page, size, { type, category });
+    const res = await this.media.getMany(data.page, size, { type: data.type, category: data.category });
+    const categories = await this.categoryCache.read();
     return {
       metadata: this.metadata.blogMetaData(),
-      page, type, category, me: this.me,
+      page: data.page,
+      type: data.type,
+      category: data.category,
+      url: data.url,
+      me: this.me,
       medias: res,
+      categories,
     }
   }
 
   // 渲染页面
-  public async render(data: any) {
+  public async render(data: IHomePageProps) {
     const htmlMetadata = this.metadata.htmlMetaData();
     const { Home, Html, client, css } = await this.getFiles();
     return renderToString(createElement(Html, {
       ...htmlMetadata,
       state: data,
+      url: data.url,
       dev: this.context.vite ? true : false,
       script: client,
       css: css,
@@ -86,10 +96,12 @@ export default class MyHomePage extends HomePage {
         import(resolve(build, manifest_server[this.pro_file].file)),
         import(resolve(build, manifest_server[this.pro_html].file)),
       ])
+      const css: string[] = (manifest_client[this.pro_client]?.css || []).map(css => this.transformAssets(css));
+      css.unshift(this.transformAssets('assets/antd.min.css'));
       return {
         Home, Html,
         client: this.transformAssets(manifest_client[this.pro_client].file),
-        css: (manifest_client[this.pro_client]?.css || []).map(css => this.transformAssets(css)),
+        css,
       }
     }
   }

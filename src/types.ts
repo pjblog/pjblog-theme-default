@@ -6,7 +6,9 @@ export interface IHomePageProps {
   type?: string,
   category?: number,
   me: IMe,
+  url: string,
   medias: IHomePageMedia[],
+  categories: ICategory[]
 }
 
 export interface IHomePageMedia {
@@ -44,8 +46,16 @@ export interface IBlogMetaData {
 }
 
 export interface IHtmlProps extends IHtmlMetaData {
+  url: string,
   dev?: boolean,
   state: any,
   script: string,
   css?: string[],
+}
+
+export interface ICategory {
+  id: number;
+  name: string;
+  outable: boolean;
+  link: string;
 }

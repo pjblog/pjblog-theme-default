@@ -48,6 +48,7 @@ export default class extends Plugin {
       }
     }
     this.HttpMiddlewares.add('prefix', middleware);
+    return () => this.HttpMiddlewares.del('prefix', middleware);
   }
 
   private serveStatic(ctx: Context, path: string, directory: string, maxAge = 24 * 60 * 60 * 1000) {

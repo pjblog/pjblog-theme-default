@@ -1,0 +1,28 @@
+ul.categories {
+  border-bottom: 1px solid #ededed;
+  border-top: 1px solid #ededed;
+  display: inline-block !important;
+  text-align: left;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  li{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: inline-block;
+    margin-right: 40px;
+    a{
+      line-height: 3.692307692;
+      &:link,&:visited{
+        color: #6a6a6a;
+      }
+      &:hover,&.active{
+        color: #000;
+      }
+      &.active{
+        font-weight: bold;
+      }
+    }
+  }
+}
