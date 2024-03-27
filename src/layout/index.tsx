@@ -10,6 +10,7 @@ export function Layout(props: PropsWithChildren<{
   description: string,
   categories: ICategory[],
   currentCategory?: number,
+  url: string,
 }>) {
   return <div className={styles.layout}>
     <div className={styles.header}>
@@ -19,7 +20,7 @@ export function Layout(props: PropsWithChildren<{
       </Theme>
     </div>
     <div className={styles.category}>
-      <Categories value={props.categories} current={props.currentCategory} />
+      <Categories value={props.categories} current={props.currentCategory} url={props.url} />
     </div>
     <div className={styles.body}>{props.children}</div>
   </div>

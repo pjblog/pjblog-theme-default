@@ -29,6 +29,7 @@ export default defineConfig({
                   preview: resolve('src/preview.ts'),
                   html: resolve('src/html.tsx'),
                   home: resolve('src/home/index.tsx'),
+                  detail: resolve('src/detail/index.tsx'),
                 }
               }
             },
@@ -44,6 +45,7 @@ export default defineConfig({
               rollupOptions: {
                 input: {
                   home: resolve('src/home/client.tsx'),
+                  detail: resolve('src/detail/client.tsx'),
                 }
               }
             }

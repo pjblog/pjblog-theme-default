@@ -1,5 +1,6 @@
 import crypto from 'crypto-js';
 import HomePage from './home/server.tsx';
+import DetailPage from './detail/server.tsx';
 import send from 'koa-send';
 import { Plugin, SchemaBase } from "@pjblog/blog";
 import { createRequire } from 'node:module';
@@ -34,6 +35,7 @@ export default class extends Plugin {
 
   public async initialize() {
     await this.$theme('home', HomePage);
+    await this.$theme('detail', DetailPage);
     const middleware: Middleware = async (ctx, next) => {
       if (!ctx.url.startsWith('/~')) return await next();
       const pathname = ctx.url.substring('/~'.length) || '/';

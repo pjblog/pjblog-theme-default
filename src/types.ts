@@ -1,14 +1,60 @@
 import { IMe } from '@pjblog/blog';
 
 export interface IHomePageProps {
-  metadata: IBlogMetaData,
-  page: number,
-  type?: string,
-  category?: number,
   me: IMe,
-  url: string,
-  medias: IHomePageMedia[],
+  location: {
+    url: string,
+    query: {
+      page?: number,
+      type?: string,
+      category?: number,
+    }
+  }
+  medias: {
+    data: IHomePageMedia[],
+    total: number,
+    size: number,
+  },
+  hots: ISideMedia[],
+  latests: ISideMedia[],
   categories: ICategory[]
+}
+
+export interface IDetailPageProps {
+  me: IMe,
+  location: {
+    url: string,
+    query: {
+      page?: number,
+      token: string,
+    }
+  }
+  hots: ISideMedia[],
+  latests: ISideMedia[],
+  categories: ICategory[],
+  media: {
+    title: string,
+    category: number,
+    user: number,
+    readCount: number,
+    type: string,
+    commentable: boolean,
+    gmtc: string | Date,
+    gmtm: string | Date,
+  },
+  article?: IArticle,
+}
+
+export interface IArticle {
+  md5: string,
+  markdown: string,
+  source: string[],
+  tags: ITag[],
+}
+
+export interface ITag {
+  id: number,
+  name: string,
 }
 
 export interface IHomePageMedia {
@@ -29,14 +75,11 @@ export interface IHomePageMedia {
   gmtc: string;
 }
 
-export interface IHtmlMetaData {
+export interface IMetaData {
   title: string;
   description: string;
   keywords: string[];
   domain: string;
-}
-
-export interface IBlogMetaData {
   theme: string;
   icp: string;
   close: boolean;
@@ -45,8 +88,7 @@ export interface IBlogMetaData {
   commentable: boolean;
 }
 
-export interface IHtmlProps extends IHtmlMetaData {
-  url: string,
+export interface IHtmlProps extends IMetaData {
   dev?: boolean,
   state: any,
   script: string,
@@ -58,4 +100,11 @@ export interface ICategory {
   name: string;
   outable: boolean;
   link: string;
+}
+
+export interface ISideMedia {
+  token: string;
+  type: string;
+  title: string;
+  gmtc: Date;
 }

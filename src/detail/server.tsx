@@ -1,13 +1,14 @@
 import ViteDevServer from "@pjblog/vite-middleware";
 import type { IMe } from '@pjblog/blog';
-import { HomePage, MediaService, BlogVariable, CategoryCache } from "@pjblog/blog";
+import { DetailPgae, BlogVariable, CategoryCache, MediaService, MediaArticleService, Media, MediaTagService } from "@pjblog/blog";
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { createRequire } from 'node:module';
 import { createElement } from 'react';
-import { renderToString } from 'react-dom/server'
+import { renderToString } from 'react-dom/server';
+import { Context } from '@zille/core';
 import { BlogMetaDataProvider } from "../metadata.ts";
-import { IHomePageProps, IHtmlProps } from "../types.ts";
+import { IArticle, IDetailPageProps, IHomePageProps, IHtmlProps } from "../types.ts";
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
@@ -16,93 +17,118 @@ const dist = resolve(__dirname, '../dist');
 const manifestServerFile = resolve(build, 'manifest.json');
 const manifestClientFile = resolve(dist, 'manifest.json');
 
-@HomePage.Injectable()
-export default class MyHomePage extends HomePage {
+@DetailPgae.Injectable()
+export default class MyHomePage extends DetailPgae {
   // 当前个人信息
-  @HomePage.Inject('me')
+  @DetailPgae.Inject('me')
   private readonly me: IMe;
 
   // 博客偏好设置数据
-  @HomePage.Inject(BlogVariable)
+  @DetailPgae.Inject(BlogVariable)
   private readonly configs: BlogVariable;
 
   // 开发模式下的 vite 对象
-  @HomePage.Inject(ViteDevServer)
+  @DetailPgae.Inject(ViteDevServer)
   private readonly context: ViteDevServer;
 
   // 基础博客数据
-  @HomePage.Inject(BlogMetaDataProvider)
+  @DetailPgae.Inject(BlogMetaDataProvider)
   private readonly metadata: BlogMetaDataProvider;
 
   // 首页媒体列表
-  @HomePage.Inject(MediaService)
+  @DetailPgae.Inject(MediaService)
   private readonly media: MediaService;
 
-  @HomePage.Inject(CategoryCache)
+  @DetailPgae.Inject(CategoryCache)
   private readonly categoryCache: CategoryCache;
 
   // 需要渲染的文件
   private readonly dev_file = resolve(__dirname, 'index.tsx');
   private readonly dev_html = resolve(__dirname, '../html.tsx');
-  private readonly pro_file = 'src/home/index.tsx';
+  private readonly pro_file = 'src/detail/index.tsx';
   private readonly pro_html = 'src/html.tsx';
-  private readonly pro_client = 'src/home/client.tsx';
+  private readonly pro_client = 'src/detail/client.tsx';
 
   // 渲染需要提供的数据源
-  public async state(data: { page: number, type: string, category: number, url: string }): Promise<IHomePageProps> {
-    const size = this.configs.get('mediaQueryWithPageSize');
-    const [res, total] = await this.media.getMany(data.page, size, { type: data.type, category: data.category });
+  public async state(data: { page: number, token: string, url: string }, context: Context): Promise<IDetailPageProps> {
+    const size = this.configs.get('mediaCommentWithPageSize');
     const categories = await this.categoryCache.read();
     const hots = await this.media.hot(this.configs.get('mediaHotWithSize'), 'article');
     const latests = await this.media.latest(this.configs.get('mediaLatestWithSize'), 'article');
+    const media = await this.media.getOneByToken(data.token);
+    context.addCache(Media.Middleware_Store_NameSpace, media);
+    let article: IArticle;
+    switch (media.media_type) {
+      case 'article':
+        const Article = await this.$use(MediaArticleService);
+        const Tag = await this.$use(MediaTagService);
+        const _article = await Article.getOne();
+        const tags = await Tag.getMany();
+        article = {
+          markdown: _article.markdown,
+          md5: _article.md5,
+          source: _article.source,
+          tags: tags.map(tag => ({
+            id: tag.id,
+            name: tag.tag_name,
+          }))
+        }
+        break;
+    }
     return {
       me: this.me,
-      medias: {
-        data: res,
-        total, size,
-      },
       categories,
       hots,
       latests,
+      article,
       location: {
         url: data.url,
         query: {
           page: data.page,
-          type: data.type,
-          category: data.category,
+          token: data.token,
         }
       },
+      media: {
+        title: media.media_title,
+        category: media.media_category,
+        user: media.media_user_id,
+        readCount: media.media_read_count,
+        type: media.media_type,
+        commentable: media.commentable,
+        gmtc: media.gmt_create,
+        gmtm: media.gmt_modified,
+      }
     }
   }
 
   // 渲染页面
   public async render(data: IHomePageProps) {
     const metadata = this.metadata.get();
-    const { Home, Html, client, css } = await this.getFiles();
+    const { Detail, Html, client, css } = await this.getFiles();
     return renderToString(createElement(Html, {
       ...metadata,
       state: data,
       dev: !!this.context.vite,
       script: client,
       css: css,
-    } satisfies IHtmlProps, createElement(Home, data)));
+    } satisfies IHtmlProps, createElement(Detail, data)));
   }
 
   private async getFiles() {
     if (this.context.vite) {
-      const [{ default: Home }, { default: Html }] = await Promise.all([
+      const [{ default: Detail }, { default: Html }] = await Promise.all([
         this.context.vite.ssrLoadModule(this.dev_file, { fixStacktrace: true }),
         this.context.vite.ssrLoadModule(this.dev_html, { fixStacktrace: true }),
       ])
       return {
-        Home, Html,
-        client: '/src/home/client.tsx',
+        Detail, Html,
+        client: '/src/detail/client.tsx',
         css: [],
       }
     } else {
       const manifest_server = require(manifestServerFile);
       const manifest_client = require(manifestClientFile);
-      const [{ default: Home }, { default: Html }] = await Promise.all([
+      const [{ default: Detail }, { default: Html }] = await Promise.all([
         import(resolve(build, manifest_server[this.pro_file].file)),
         import(resolve(build, manifest_server[this.pro_html].file)),
       ])
@@ -117,7 +143,7 @@ export default class MyHomePage extends HomePage {
         }
       }
       return {
-        Home, Html,
+        Detail, Html,
         client: this.transformAssets(manifest_client[this.pro_client].file),
         css,
       }

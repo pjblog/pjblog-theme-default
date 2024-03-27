@@ -6,17 +6,12 @@ export class BlogMetaDataProvider extends Service {
   @Service.Inject(BlogVariable)
   private readonly configs: BlogVariable;
 
-  public htmlMetaData() {
+  public get() {
     return {
       title: this.configs.get('title'),
       description: this.configs.get('description'),
       keywords: this.configs.get('keywords'),
       domain: this.configs.get('domain'),
-    }
-  }
-
-  public blogMetaData() {
-    return {
       theme: this.configs.get('theme'),
       icp: this.configs.get('icp'),
       close: this.configs.get('close'),
