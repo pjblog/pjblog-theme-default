@@ -1,13 +1,13 @@
 import ViteDevServer from "@pjblog/vite-middleware";
 import type { IMe } from '@pjblog/blog';
-import { HomePage, MediaService, BlogVariable, CategoryCache } from "@pjblog/blog";
+import { ArchivePage, MediaService, BlogVariable, CategoryCache } from "@pjblog/blog";
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { createRequire } from 'node:module';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server'
 import { BlogMetaDataProvider } from "../metadata.ts";
-import { IHomePageProps, IHtmlProps } from "../types.ts";
+import { IArchivePageProps, IHtmlProps } from "../types.ts";
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
@@ -16,54 +16,61 @@ const dist = resolve(__dirname, '../dist');
 const manifestServerFile = resolve(build, 'manifest.json');
 const manifestClientFile = resolve(dist, 'manifest.json');
 
-@HomePage.Injectable()
-export default class MyHomePage extends HomePage {
+@ArchivePage.Injectable()
+export default class MyHomePage extends ArchivePage {
   // 当前个人信息
-  @HomePage.Inject('me')
+  @ArchivePage.Inject('me')
   private readonly me: IMe;
 
   // 博客偏好设置数据
-  @HomePage.Inject(BlogVariable)
+  @ArchivePage.Inject(BlogVariable)
   private readonly configs: BlogVariable;
 
   // 开发模式下的 vite 对象
-  @HomePage.Inject(ViteDevServer)
+  @ArchivePage.Inject(ViteDevServer)
   private readonly context: ViteDevServer;
 
   // 基础博客数据
-  @HomePage.Inject(BlogMetaDataProvider)
+  @ArchivePage.Inject(BlogMetaDataProvider)
   private readonly metadata: BlogMetaDataProvider;
 
   // 首页媒体列表
-  @HomePage.Inject(MediaService)
+  @ArchivePage.Inject(MediaService)
   private readonly media: MediaService;
 
-  @HomePage.Inject(CategoryCache)
+  @ArchivePage.Inject(CategoryCache)
   private readonly categoryCache: CategoryCache;
 
   // 需要渲染的文件
   private readonly dev_file = resolve(__dirname, 'index.tsx');
   private readonly dev_html = resolve(__dirname, '../html.tsx');
-  private readonly pro_file = 'src/home/index.tsx';
+  private readonly pro_file = 'src/archive/index.tsx';
   private readonly pro_html = 'src/html.tsx';
-  private readonly pro_client = 'src/home/client.tsx';
+  private readonly pro_client = 'src/archive/client.tsx';
 
   // 渲染需要提供的数据源
   public async state(data: {
     page: number,
     type: string,
     category: number,
-    url: string
-  }): Promise<IHomePageProps> {
+    url: string,
+    year: number,
+    month?: number,
+    day?: number
+  }): Promise<IArchivePageProps> {
     const size = this.configs.get('mediaQueryWithPageSize');
     const [res, total] = await this.media.getMany(data.page, size, {
       type: data.type,
-      category: data.category
+      category: data.category,
+      date: {
+        year: data.year,
+        month: data.month,
+        day: data.day,
+      }
     });
     const categories = await this.categoryCache.read();
     const hots = await this.media.hot(this.configs.get('mediaHotWithSize'), 'article');
     const latests = await this.media.latest(this.configs.get('mediaLatestWithSize'), 'article');
-    const archives = await this.media.getArchiveList();
     return {
       me: this.me,
       medias: {
@@ -73,20 +80,24 @@ export default class MyHomePage extends HomePage {
       categories,
       hots,
       latests,
-      archives,
       location: {
         url: data.url,
         query: {
           page: data.page,
           type: data.type,
           category: data.category,
+        },
+        params: {
+          year: data.year,
+          month: data.month,
+          day: data.day,
         }
       },
     }
   }
 
   // 渲染页面
-  public async render(data: IHomePageProps) {
+  public async render(data: IArchivePageProps) {
     const metadata = this.metadata.get();
     const { Home, Html, client, css } = await this.getFiles();
     return renderToString(createElement(Html, {
@@ -106,7 +117,7 @@ export default class MyHomePage extends HomePage {
       ])
       return {
         Home, Html,
-        client: '/src/home/client.tsx',
+        client: '/src/archive/client.tsx',
         css: [],
       }
     } else {

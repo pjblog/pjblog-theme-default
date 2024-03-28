@@ -1,34 +1,34 @@
 import '../markdown.less';
-import styles from './index.module.less';
-import classnames from 'classnames';
-import { parse } from 'marked';
 import { useHTML } from '../html';
 import { Layout } from '../layout';
-import { PropsWithoutRef, useMemo } from 'react';
+import { PropsWithoutRef } from 'react';
 import { IDetailPageProps } from '../types';
-import { Col, Row, Tag, Typography } from 'antd';
+import { Col, Row } from 'antd';
 import { User } from '../components/user';
 import { SideList } from '../components/side-list';
+import { Article } from './article';
+import { Page } from './page';
+import { ArticleInfo } from './info';
 
 export default function (props: PropsWithoutRef<IDetailPageProps>) {
   const html = useHTML();
-  const content = useMemo(() => parse(props.article.markdown), [props.article.markdown]);
   return <Layout
     title={html.title}
     description={html.description}
     categories={props.categories}
-    currentCategory={props.media.category}
+    currentCategory={props.media.category.id}
     url={props.location.url}
   >
     <Row gutter={40}>
       <Col span={17}>
-        <Typography.Title level={2}>{props.media.title}</Typography.Title>
-        <div className={classnames('wmde-markdown', 'wmde-markdown-color', styles.markdown)} dangerouslySetInnerHTML={{ __html: content }} />
-        {/* <div>{JSON.stringify(props.media)}</div>
-        <div>{JSON.stringify(props.article)}</div> */}
+        {props.media.type === 'article' && <Article media={props.media} article={props.article} />}
+        {props.media.type === 'page' && <Page media={props.media} />}
       </Col>
       <Col span={7}>
         <Row gutter={[0, 24]}>
+          {props.media.type === 'article' && <Col span={24}>
+            <ArticleInfo media={props.media} article={props.article} />
+          </Col>}
           <Col span={24}>
             <User value={props.me} url={props.location.url} />
           </Col>

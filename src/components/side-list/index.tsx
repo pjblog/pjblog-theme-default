@@ -13,7 +13,7 @@ export function SideList(props: PropsWithoutRef<{
       {
         props.value.map(item => {
           return <li key={item.token}>
-            <Typography.Link ellipsis href={'/' + item.token}>{item.title}</Typography.Link>
+            <Typography.Link type="secondary" ellipsis href={'/' + item.token}>{item.title}</Typography.Link>
           </li>
         })
       }

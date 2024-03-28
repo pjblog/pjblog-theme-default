@@ -17,7 +17,8 @@ export interface IHomePageProps {
   },
   hots: ISideMedia[],
   latests: ISideMedia[],
-  categories: ICategory[]
+  categories: ICategory[],
+  archives: IArchive[],
 }
 
 export interface IDetailPageProps {
@@ -32,17 +33,45 @@ export interface IDetailPageProps {
   hots: ISideMedia[],
   latests: ISideMedia[],
   categories: ICategory[],
-  media: {
-    title: string,
-    category: number,
-    user: number,
-    readCount: number,
-    type: string,
-    commentable: boolean,
-    gmtc: string | Date,
-    gmtm: string | Date,
-  },
+  media: IMedia,
   article?: IArticle,
+}
+
+export interface IArchivePageProps {
+  me: IMe,
+  location: {
+    url: string,
+    query: {
+      page?: number,
+      type?: string,
+      category?: number,
+    },
+    params: {
+      year: number,
+      month?: number,
+      day?: number,
+    }
+  }
+  medias: {
+    data: IHomePageMedia[],
+    total: number,
+    size: number,
+  },
+  hots: ISideMedia[],
+  latests: ISideMedia[],
+  categories: ICategory[],
+}
+
+export interface IMedia {
+  title: string,
+  category: ICategory,
+  user: IUser,
+  readCount: number,
+  type: string,
+  commentable: boolean,
+  gmtc: string | Date,
+  gmtm: string | Date,
+  description?: string,
 }
 
 export interface IArticle {
@@ -57,6 +86,12 @@ export interface ITag {
   name: string,
 }
 
+export interface IUser {
+  account: string;
+  nickname: string;
+  avatar: string;
+}
+
 export interface IHomePageMedia {
   token: string;
   title: string;
@@ -65,11 +100,7 @@ export interface IHomePageMedia {
     name: number;
   };
   description: string;
-  user: {
-    account: string;
-    nickname: string;
-    avatar: string;
-  };
+  user: IUser;
   readCount: number;
   type: string;
   gmtc: string;
@@ -98,8 +129,8 @@ export interface IHtmlProps extends IMetaData {
 export interface ICategory {
   id: number;
   name: string;
-  outable: boolean;
-  link: string;
+  outable?: boolean;
+  link?: string;
 }
 
 export interface ISideMedia {
@@ -107,4 +138,10 @@ export interface ISideMedia {
   type: string;
   title: string;
   gmtc: Date;
+}
+
+export interface IArchive {
+  year: number,
+  month: number,
+  count: number,
 }

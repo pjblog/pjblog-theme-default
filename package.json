@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.5",
-    "@pjblog/blog": "^2.3.13",
+    "@pjblog/blog": "^2.3.19",
     "@pjblog/vite-middleware": "^2.3.1",
     "@zille/application": "^1.1.2",
     "@zille/configurator": "^1.1.2",
@@ -42,7 +42,7 @@
     "@types/classnames": "^2.3.1",
     "@types/crypto-js": "^4.2.2",
     "@types/koa": "^2.15.0",
-    "@types/react": "^18.2.72",
+    "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",

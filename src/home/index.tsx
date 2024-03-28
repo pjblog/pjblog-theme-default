@@ -13,6 +13,7 @@ import { User } from '../components/user';
 import { SideList } from '../components/side-list';
 import { Theme } from '../components/theme';
 import { Flex } from '../components/Flex';
+import { SideArchive } from '../components/archive';
 
 export default function (props: PropsWithoutRef<IHomePageProps>) {
   const html = useHTML();
@@ -58,13 +59,16 @@ export default function (props: PropsWithoutRef<IHomePageProps>) {
           <Col span={24}>
             <SideList value={props.latests} title="最新文章" />
           </Col>
+          <Col span={24}>
+            <SideArchive value={props.archives} />
+          </Col>
         </Row>
       </Col>
     </Row>
   </Layout>
 }
 
-function Media(props: PropsWithoutRef<IHomePageMedia>) {
+export function Media(props: PropsWithoutRef<IHomePageMedia>) {
   const html = useMemo(() => parse(props.description), [props.description]);
   return <div className={styles.media}>
     <Typography.Link className={styles.title} href={'/' + props.token}>{props.title}</Typography.Link>

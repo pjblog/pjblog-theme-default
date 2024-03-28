@@ -50,12 +50,17 @@ export default class MyHomePage extends DetailPgae {
   private readonly pro_client = 'src/detail/client.tsx';
 
   // 渲染需要提供的数据源
-  public async state(data: { page: number, token: string, url: string }, context: Context): Promise<IDetailPageProps> {
+  public async state(data: {
+    page: number,
+    token: string,
+    url: string
+  }, context: Context): Promise<IDetailPageProps> {
     const size = this.configs.get('mediaCommentWithPageSize');
     const categories = await this.categoryCache.read();
     const hots = await this.media.hot(this.configs.get('mediaHotWithSize'), 'article');
     const latests = await this.media.latest(this.configs.get('mediaLatestWithSize'), 'article');
     const media = await this.media.getOneByToken(data.token);
+    const { category, user } = await this.media.getMore(media.id);
     context.addCache(Media.Middleware_Store_NameSpace, media);
     let article: IArticle;
     switch (media.media_type) {
@@ -90,13 +95,14 @@ export default class MyHomePage extends DetailPgae {
       },
       media: {
         title: media.media_title,
-        category: media.media_category,
-        user: media.media_user_id,
+        category,
+        user,
         readCount: media.media_read_count,
         type: media.media_type,
         commentable: media.commentable,
         gmtc: media.gmt_create,
         gmtm: media.gmt_modified,
+        description: media.media_type === 'page' ? media.media_description : undefined,
       }
     }
   }
