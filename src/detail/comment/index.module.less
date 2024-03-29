@@ -1,0 +1,30 @@
+.next{
+  width: 100%;
+  &.hide{
+    overflow: hidden;
+  }
+  &.preview{
+    :global{
+      .md-editor-previewOnly{
+        .md-editor-preview-wrapper{
+          padding: 0!important;
+          .md-editor-preview{
+            font-size: 14px!important;
+          }
+        }
+      }
+    }
+  }
+  &.info{
+    background-color: #fafafa;
+    padding: 2px 8px;
+    border-radius: 2px;
+    strong{
+      color: #000;
+      font-weight: normal;
+    }
+  }
+  &.list{
+    margin-top: 20px;
+  }
+}

@@ -21,7 +21,13 @@ export default function (props: PropsWithoutRef<IDetailPageProps>) {
   >
     <Row gutter={40}>
       <Col span={17}>
-        {props.media.type === 'article' && <Article media={props.media} article={props.article} />}
+        {props.media.type === 'article' && <Article
+          media={props.media}
+          article={props.article}
+          token={props.location.params.token}
+          page={props.location.query.page}
+          url={props.location.url}
+        />}
         {props.media.type === 'page' && <Page media={props.media} />}
       </Col>
       <Col span={7}>

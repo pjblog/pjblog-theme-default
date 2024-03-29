@@ -27,6 +27,8 @@ export interface IDetailPageProps {
     url: string,
     query: {
       page?: number,
+    },
+    params: {
       token: string,
     }
   }
@@ -79,6 +81,13 @@ export interface IArticle {
   markdown: string,
   source: string[],
   tags: ITag[],
+  comments: {
+    data: IComment[],
+    total: number,
+    rootSize: number,
+    childSize: number,
+    commentable: boolean,
+  }
 }
 
 export interface ITag {
@@ -144,4 +153,16 @@ export interface IArchive {
   year: number,
   month: number,
   count: number,
+}
+
+export interface IComment {
+  id: number,
+  content: string,
+  gmtc: string | Date,
+  gmtm: string | Date,
+  children: number,
+  user: {
+    avatar: string,
+    nickname: string,
+  }
 }

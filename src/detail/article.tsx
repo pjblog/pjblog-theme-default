@@ -1,14 +1,21 @@
 import styles from './index.module.less';
 import classnames from 'classnames';
 import { parse } from 'marked';
-import { PropsWithoutRef, useMemo } from "react";
-import { IArticle, IMedia } from "../types";
-import { Typography, Divider } from "antd";
+import { PropsWithoutRef, useMemo, useState } from "react";
+import { IArticle, IComment, IMedia } from "../types";
+import { Typography, Divider, Row, Col, Pagination } from "antd";
+import { CommentPoster } from './comment/post';
+import { CommentList } from './comment/list';
 
 export function Article(props: PropsWithoutRef<{
   media: IMedia,
-  article: IArticle
+  article: IArticle,
+  token: string,
+  page: number,
+  url: string,
 }>) {
+  const [total, setTotal] = useState(props.article.comments.total);
+  const [comments, setComments] = useState<IComment[]>(props.article.comments.data);
   const content = useMemo(() => parse(props.article.markdown), [props.article.markdown]);
   return <>
     <Typography.Title level={2} style={{ marginBottom: 48 }}>{props.media.title}</Typography.Title>
@@ -25,5 +32,43 @@ export function Article(props: PropsWithoutRef<{
         })}
       </ol>
     </>}
+    <Row gutter={[0, 48]}>
+      {props.article.comments.commentable && <Col span={24}>
+        <Typography.Title level={4}>发表评论</Typography.Title>
+        <CommentPoster clearable token={props.token} parent={0} id={0} onUpdate={(type, comment) => {
+          if (type === 'add') {
+            let _comments = [
+              comment,
+              ...comments
+            ];
+            if (_comments.length > props.article.comments.rootSize) {
+              _comments = _comments.slice(0, props.article.comments.rootSize)
+            }
+            setComments([
+              comment,
+              ...comments
+            ])
+            setTotal(total + 1);
+          }
+        }} />
+      </Col>}
+      {!!comments.length && props.article.comments.commentable && <Col span={24} id="commnets">
+        <Typography.Title level={4}>评论列表({total})</Typography.Title>
+        <CommentList value={comments} token={props.token} size={props.article.comments.rootSize} />
+      </Col>}
+      {!!comments.length && props.article.comments.commentable && <Col span={24}>
+        <Pagination
+          current={props.page}
+          pageSize={props.article.comments.rootSize}
+          total={props.article.comments.total}
+          onChange={p => {
+            const URI = new URL('http://localhost' + props.url);
+            URI.searchParams.set('page', p + '');
+            window.location.href = URI.pathname + URI.search + '#comments';
+          }}
+        />
+      </Col>}
+    </Row>
   </>
 }
+

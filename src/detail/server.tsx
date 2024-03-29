@@ -1,6 +1,6 @@
 import ViteDevServer from "@pjblog/vite-middleware";
 import type { IMe } from '@pjblog/blog';
-import { DetailPgae, BlogVariable, CategoryCache, MediaService, MediaArticleService, Media, MediaTagService } from "@pjblog/blog";
+import { DetailPgae, BlogVariable, CategoryCache, MediaService, MediaArticleService, Media, MediaTagService, MediaCommentService } from "@pjblog/blog";
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { createRequire } from 'node:module';
@@ -55,7 +55,9 @@ export default class MyHomePage extends DetailPgae {
     token: string,
     url: string
   }, context: Context): Promise<IDetailPageProps> {
-    const size = this.configs.get('mediaCommentWithPageSize');
+    const rootSize = this.configs.get('mediaCommentWithPageSize');
+    const childSize = this.configs.get('mediaCommentWithChildrenPageSize');
+    const commentable = this.configs.get('mediaCommentable');
     const categories = await this.categoryCache.read();
     const hots = await this.media.hot(this.configs.get('mediaHotWithSize'), 'article');
     const latests = await this.media.latest(this.configs.get('mediaLatestWithSize'), 'article');
@@ -67,12 +69,21 @@ export default class MyHomePage extends DetailPgae {
       case 'article':
         const Article = await this.$use(MediaArticleService);
         const Tag = await this.$use(MediaTagService);
+        const Comment = await this.$use(MediaCommentService);
         const _article = await Article.getOne();
         const tags = await Tag.getMany();
+        const comments = await Comment.getMany(data.page, rootSize, 0);
         article = {
           markdown: _article.markdown,
           md5: _article.md5,
           source: _article.source,
+          comments: {
+            data: comments[0],
+            total: comments[1],
+            rootSize,
+            childSize,
+            commentable: media.commentable || commentable,
+          },
           tags: tags.map(tag => ({
             id: tag.id,
             name: tag.tag_name,
@@ -90,6 +101,8 @@ export default class MyHomePage extends DetailPgae {
         url: data.url,
         query: {
           page: data.page,
+        },
+        params: {
           token: data.token,
         }
       },
