@@ -161,8 +161,10 @@ export interface IComment {
   gmtc: string | Date,
   gmtm: string | Date,
   children: number,
+  parent: number,
   user: {
     avatar: string,
     nickname: string,
+    account: string,
   }
 }

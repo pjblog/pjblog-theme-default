@@ -35,7 +35,7 @@ export function CommentPoster(props: PropsWithoutRef<{
   parent: number,
   id: number,
   content?: string,
-  onUpdate: (type: 'add' | 'update', data: IComment) => void,
+  onUpdate: (type: 'add' | 'update', data: IComment | string) => void,
   extra?: ReactNode,
   clearable?: boolean
 }>) {
@@ -49,8 +49,8 @@ export function CommentPoster(props: PropsWithoutRef<{
       updateComment(props.token, props.id, content)
         .then((res) => transformResponse<IComment>(
           res.data,
-          comment => {
-            props.onUpdate('update', comment);
+          () => {
+            props.onUpdate('update', content);
             if (props.clearable) {
               setContent('');
             }
@@ -103,7 +103,7 @@ function addComment(token: string, content: string, parent: number) {
   })
 }
 function updateComment(token: string, id: number, content: string) {
-  return axios.put('/-/media/' + token + '/comment/' + id, {
+  return axios.post('/-/media/' + token + '/comment/' + id, {
     content,
   })
 }

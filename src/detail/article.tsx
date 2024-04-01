@@ -6,6 +6,7 @@ import { IArticle, IComment, IMedia } from "../types";
 import { Typography, Divider, Row, Col, Pagination } from "antd";
 import { CommentPoster } from './comment/post';
 import { CommentList } from './comment/list';
+import { useMe } from '../utils';
 
 export function Article(props: PropsWithoutRef<{
   media: IMedia,
@@ -14,9 +15,13 @@ export function Article(props: PropsWithoutRef<{
   page: number,
   url: string,
 }>) {
+  const me = useMe();
   const [total, setTotal] = useState(props.article.comments.total);
   const [comments, setComments] = useState<IComment[]>(props.article.comments.data);
   const content = useMemo(() => parse(props.article.markdown), [props.article.markdown]);
+  const showComment = useMemo(() => comments.length && props.article.comments.commentable && !!me.account, [
+    comments, props.article.comments.commentable, me.account
+  ])
   return <>
     <Typography.Title level={2} style={{ marginBottom: 48 }}>{props.media.title}</Typography.Title>
     <div
@@ -35,7 +40,7 @@ export function Article(props: PropsWithoutRef<{
     <Row gutter={[0, 48]}>
       {props.article.comments.commentable && <Col span={24}>
         <Typography.Title level={4}>发表评论</Typography.Title>
-        <CommentPoster clearable token={props.token} parent={0} id={0} onUpdate={(type, comment) => {
+        <CommentPoster clearable token={props.token} parent={0} id={0} onUpdate={(type, comment: IComment) => {
           if (type === 'add') {
             let _comments = [
               comment,
@@ -52,11 +57,11 @@ export function Article(props: PropsWithoutRef<{
           }
         }} />
       </Col>}
-      {!!comments.length && props.article.comments.commentable && <Col span={24} id="commnets">
+      {showComment && <Col span={24} id="commnets">
         <Typography.Title level={4}>评论列表({total})</Typography.Title>
         <CommentList value={comments} token={props.token} size={props.article.comments.rootSize} />
       </Col>}
-      {!!comments.length && props.article.comments.commentable && <Col span={24}>
+      {showComment && <Col span={24}>
         <Pagination
           current={props.page}
           pageSize={props.article.comments.rootSize}

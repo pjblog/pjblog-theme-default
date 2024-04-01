@@ -16,15 +16,15 @@
     "build:server": "rm -rf ./build && vite build --ssr"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.3.5",
-    "@pjblog/blog": "^2.3.20",
+    "@ant-design/icons": "^5.3.6",
+    "@pjblog/blog": "^2.3.23",
     "@pjblog/vite-middleware": "^2.3.1",
     "@zille/application": "^1.1.2",
     "@zille/configurator": "^1.1.2",
     "@zille/core": "^1.1.2",
     "@zille/http": "^1.1.12",
     "@zille/service": "^1.1.2",
-    "antd": "^5.15.4",
+    "antd": "^5.16.0",
     "axios": "^1.6.8",
     "classnames": "^2.5.1",
     "crypto-js": "^4.2.0",
