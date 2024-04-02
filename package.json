@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.6",
-    "@pjblog/blog": "^2.3.23",
+    "@fingerprintjs/fingerprintjs": "^4.2.2",
+    "@pjblog/blog": "^2.3.32",
     "@pjblog/vite-middleware": "^2.3.1",
     "@zille/application": "^1.1.2",
     "@zille/configurator": "^1.1.2",

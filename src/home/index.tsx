@@ -23,6 +23,8 @@ export default function (props: PropsWithoutRef<IHomePageProps>) {
     categories={props.categories}
     currentCategory={props.location.query.category}
     url={props.location.url}
+    icp={html.icp}
+    theme={html.theme}
   >
     <Row gutter={40}>
       <Col span={17}>
@@ -85,7 +87,9 @@ export function Media(props: PropsWithoutRef<IHomePageMedia>) {
         <Divider type="vertical" />
         <Typography.Link href={'/?category=' + props.category.id}>{props.category.name}</Typography.Link>
         <Divider type="vertical" />
-        <Typography.Text type="secondary">阅读量 {props.readCount}</Typography.Text>
+        <Typography.Text type="secondary">{props.readCount} 次阅读</Typography.Text>
+        <Divider type="vertical" />
+        <Typography.Text type="secondary">{props.comments} 条评论</Typography.Text>
       </Flex>
     </Theme>
   </div>

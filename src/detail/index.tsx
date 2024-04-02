@@ -20,6 +20,8 @@ export default function (props: PropsWithoutRef<IDetailPageProps>) {
       categories={props.categories}
       currentCategory={props.media.category.id}
       url={props.location.url}
+      icp={html.icp}
+      theme={html.theme}
     >
       <Row gutter={40}>
         <Col span={17}>

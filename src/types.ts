@@ -111,6 +111,7 @@ export interface IHomePageMedia {
   description: string;
   user: IUser;
   readCount: number;
+  comments?: number;
   type: string;
   gmtc: string;
 }

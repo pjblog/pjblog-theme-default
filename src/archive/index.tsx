@@ -15,6 +15,8 @@ export default function (props: PropsWithoutRef<IArchivePageProps>) {
     categories={props.categories}
     currentCategory={props.location.query.category}
     url={props.location.url}
+    icp={html.icp}
+    theme={html.theme}
   >
     <Row gutter={40}>
       <Col span={17}>
