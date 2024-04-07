@@ -2,7 +2,6 @@ import styles from './index.module.less';
 import { PropsWithoutRef } from "react";
 import { IArchive } from "../../types";
 import { Side } from "../side";
-import { Typography } from "antd";
 
 export function SideArchive(props: PropsWithoutRef<{
   value: IArchive[],
@@ -12,10 +11,9 @@ export function SideArchive(props: PropsWithoutRef<{
       {
         props.value.map(({ year, month, count }, index) => {
           return <li key={index}>
-            <Typography.Link
-              type="secondary"
+            <a
               href={`/archive/${year}/${month}`}
-            >{year}年{month}月({count})</Typography.Link>
+            >{year}年{month}月({count})</a>
           </li>
         })
       }

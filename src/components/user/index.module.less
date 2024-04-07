@@ -5,12 +5,18 @@ ul.list{
   li{
     width: 100%;
     overflow: hidden;
-    height: 24px;
-    line-height: 24px;
-    padding: 0 8px;
+    padding: 2px 8px;
     border-radius: 4px;
-    &:hover{
-      background-color: #fafafa;
+    a{
+      font-size: 13px;
+      text-decoration: none;
+      &:link,&:visited{
+        color: #666;
+      }
+      &:hover{
+        color: #000;
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -19,4 +25,23 @@ ul.list{
   margin-bottom: 8px;
   background-color: #fafafa;
   padding: 8px;
+  .nickname{
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 4px;
+  }
+  .info{
+    font-size: 12px;
+    span{
+      color: #999;
+    }
+    a{
+      &:link,&:visited{
+        color: #888;
+      }
+      &:hover{
+        color: #000;
+      }
+    }
+  }
 }

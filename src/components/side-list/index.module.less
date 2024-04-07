@@ -3,14 +3,24 @@ ul.list{
   margin: 0;
   list-style: none;
   li{
-    width: 100%;
-    overflow: hidden;
-    height: 24px;
-    line-height: 24px;
-    padding: 0 8px;
-    border-radius: 4px;
-    &:hover{
-      background-color: #fafafa;
+    a{
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      height: 24px;
+      line-height: 24px;
+      padding: 0 8px;
+      border-radius: 4px;
+      font-size: 13px;
+      text-decoration: none;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      &:link,&:visited{
+        color: #555;
+      }
+      &:hover{
+        color: #000;
+      }
     }
   }
 }

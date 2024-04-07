@@ -8,6 +8,7 @@ import { createElement } from 'react';
 import { renderToString } from 'react-dom/server'
 import { BlogMetaDataProvider } from "../metadata.ts";
 import { IArchivePageProps, IHtmlProps } from "../types.ts";
+import { createCache, extractStyle, StyleProvider } from '@ant-design/cssinjs';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
@@ -100,13 +101,19 @@ export default class MyHomePage extends ArchivePage {
   public async render(data: IArchivePageProps) {
     const metadata = this.metadata.get();
     const { Home, Html, client, css } = await this.getFiles();
-    return renderToString(createElement(Html, {
+    const cache = createCache();
+    const child = !this.context.vite
+      ? createElement(StyleProvider, { cache }, createElement(Home, data))
+      : createElement(Home, data)
+    const html = renderToString(createElement(Html, {
       ...metadata,
       state: data,
       dev: !!this.context.vite,
       script: client,
       css: css,
-    } satisfies IHtmlProps, createElement(Home, data)));
+    } satisfies IHtmlProps, child));
+    const styleText = extractStyle(cache);
+    return html + styleText;
   }
 
   private async getFiles() {
@@ -128,7 +135,7 @@ export default class MyHomePage extends ArchivePage {
         import(resolve(build, manifest_server[this.pro_html].file)),
       ])
       const css: string[] = (manifest_client[this.pro_client]?.css || []).map(_ => this.transformAssets(_));
-      css.unshift(this.transformAssets('assets/antd.min.css'));
+      // css.unshift(this.transformAssets('assets/antd.min.css'));
       if (manifest_client[this.pro_client].imports?.length) {
         for (let i = 0; i < manifest_client[this.pro_client].imports.length; i++) {
           const child = manifest_client[this.pro_client].imports[i];

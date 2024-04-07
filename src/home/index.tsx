@@ -1,19 +1,23 @@
 import '../markdown.less';
+import 'rc-pagination/assets/index.less';
 import styles from './index.module.less';
 import classnames from 'classnames';
 import dayjs from 'dayjs';
+import Pagination from 'rc-pagination';
 import { parse } from 'marked';
 import { useHTML } from '../html';
 import { Layout } from '../layout';
 import { IHomePageMedia, IHomePageProps } from '../types';
 import { PropsWithoutRef } from 'react';
-import { Row, Col, Typography, Space, Avatar, Divider, Pagination } from 'antd';
 import { useMemo } from 'react';
 import { User } from '../components/user';
 import { SideList } from '../components/side-list';
-import { Theme } from '../components/theme';
 import { Flex } from '../components/Flex';
 import { SideArchive } from '../components/archive';
+import { Avatar } from '../components/avatar';
+
+// @ts-ignore
+const Paginations = (Pagination?.default || Pagination) as typeof Pagination;
 
 export default function (props: PropsWithoutRef<IHomePageProps>) {
   const html = useHTML();
@@ -26,71 +30,47 @@ export default function (props: PropsWithoutRef<IHomePageProps>) {
     icp={html.icp}
     theme={html.theme}
   >
-    <Row gutter={40}>
-      <Col span={17}>
-        <Row gutter={[0, 48]}>
-          {
-            props.medias.data.map(media => {
-              return <Col span={24} key={media.token}>
-                <Media {...media} />
-              </Col>
-            })
-          }
-          <Col span={24}>
-            <Pagination
-              current={props.location.query.page}
-              pageSize={props.medias.size}
-              total={props.medias.total}
-              onChange={page => {
-                const URI = new URL('http://localhost' + props.location.url);
-                URI.searchParams.set('page', page + '');
-                window.location.href = URI.pathname + URI.search;
-              }}
-            />
-          </Col>
-        </Row>
-      </Col>
-      <Col span={7}>
-        <Row gutter={[0, 24]}>
-          <Col span={24}>
-            <User value={props.me} url={props.location.url} />
-          </Col>
-          <Col span={24}>
-            <SideList value={props.hots} title="热门文章" />
-          </Col>
-          <Col span={24}>
-            <SideList value={props.latests} title="最新文章" />
-          </Col>
-          <Col span={24}>
-            <SideArchive value={props.archives} />
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+    <Flex block gap={48}>
+      <Flex span={1} scroll="hide" direction="vertical">
+        {props.medias.data.map(media => <Media key={media.token} {...media} />)}
+        <Paginations
+          current={props.location.query.page}
+          pageSize={props.medias.size}
+          total={props.medias.total}
+          onChange={page => {
+            const URI = new URL('http://localhost' + props.location.url);
+            URI.searchParams.set('page', page + '');
+            window.location.href = URI.pathname + URI.search;
+          }}
+        />
+      </Flex>
+      <div className={styles.sidebar}>
+        <User value={props.me} url={props.location.url} />
+        <SideList value={props.hots} title="热门文章" />
+        <SideList value={props.latests} title="最新文章" />
+        <SideArchive value={props.archives} />
+      </div>
+    </Flex>
   </Layout>
 }
 
 export function Media(props: PropsWithoutRef<IHomePageMedia>) {
   const html = useMemo(() => parse(props.description), [props.description]);
   return <div className={styles.media}>
-    <Typography.Link className={styles.title} href={'/' + props.token}>{props.title}</Typography.Link>
+    <a className={styles.title} href={'/' + props.token}>{props.title}</a>
     <div className={classnames('wmde-markdown', 'wmde-markdown-color', styles.markdown)} dangerouslySetInnerHTML={{ __html: html }} />
-    <Theme>
-      <Flex valign="middle">
-        <Flex gap={4} valign="middle">
-          <Space size={2}>
-            <Avatar src={props.user.avatar} size={18} />
-            <Typography.Text type="secondary">{props.user.nickname}</Typography.Text>
-          </Space>
-          <Typography.Text type="secondary">发表于 {dayjs(props.gmtc).format('YYYY-MM-DD HH:mm')}</Typography.Text>
+    <Flex valign="middle" gap={16} align="between">
+      <Flex gap={8} valign="middle">
+        <Flex valign="middle" gap={4}>
+          <Avatar src={props.user.avatar} size={18} />
+          <span className={styles.secondary}>{props.user.nickname}</span>
         </Flex>
-        <Divider type="vertical" />
-        <Typography.Link href={'/?category=' + props.category.id}>{props.category.name}</Typography.Link>
-        <Divider type="vertical" />
-        <Typography.Text type="secondary">{props.readCount} 次阅读</Typography.Text>
-        <Divider type="vertical" />
-        <Typography.Text type="secondary">{props.comments} 条评论</Typography.Text>
+        <span className={styles.secondary}>{dayjs(props.gmtc).format('YYYY-MM-DD HH:mm')}发表在 <a href={'/?category=' + props.category.id}>{props.category.name}</a></span>
       </Flex>
-    </Theme>
+      <Flex gap={12}>
+        <span className={styles.secondary}>{props.readCount}次阅读</span>
+        <span className={styles.secondary}>{props.comments}条评论</span>
+      </Flex>
+    </Flex>
   </div>
 }

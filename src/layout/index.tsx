@@ -1,9 +1,7 @@
 import styles from './index.module.less';
-import 'antd/es/style/reset.css';
+import '../reset.css';
 import axios from 'axios';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
-import { Divider, Space, Typography } from 'antd';
-import { Theme } from '../components/theme';
 import { Categories } from '../components/category';
 import { ICategory } from '../types';
 import { Flex } from '../components/Flex';
@@ -46,15 +44,13 @@ export function Layout(props: PropsWithChildren<{
   const [total, setTotal] = useState(0);
   const [list, setList] = useState<string[]>([]);
   useEffect(() => {
-    const eventSource = new EventSource('/-/visitor');
+    const eventSource = new EventSource('/-/online');
     eventSource.onmessage = event => {
       try {
         const { online, list } = JSON.parse(event.data);
         setTotal(online);
         setList(list);
-      } catch (e) {
-        console.error(e, event.data)
-      }
+      } catch (e) { }
     }
     return () => eventSource.close();
   }, [])
@@ -62,10 +58,8 @@ export function Layout(props: PropsWithChildren<{
     <div className={styles.container}>
       <div className={styles.layout}>
         <div className={styles.header}>
-          <Typography.Title level={1} className={styles.title}>{props.title}</Typography.Title>
-          <Theme>
-            <Typography.Text>{props.description}</Typography.Text>
-          </Theme>
+          <h1 className={styles.title}>{props.title}</h1>
+          <span className={styles.slogen}>{props.description}</span>
         </div>
         <div className={styles.category}>
           <Categories value={props.categories} current={props.currentCategory} url={props.url} />
@@ -73,25 +67,15 @@ export function Layout(props: PropsWithChildren<{
         <div className={styles.body}>{props.children}</div>
       </div>
       <footer className={styles.footer}>
-        <Theme>
-          <Flex direction="vertical" block align="center" valign="middle">
-            <Space>
-              <Typography.Text type="secondary">Using theme</Typography.Text>
-              <Typography.Link type="secondary" href={'https://www.npmjs.com/' + props.theme} target="_blank">`{props.theme}`</Typography.Link>
-            </Space>
-            <Space>
-              <Typography.Text type="secondary">CopyRight@2004-Present</Typography.Text>
-              <Typography.Link type="secondary" href="https://www.pjhome.net/" target="_blank">PJBlog</Typography.Link>
-              <Typography.Text type="secondary">All Rights Reserved.</Typography.Text>
-              <Typography.Link type="secondary" href="https://beian.miit.gov.cn/" target="_blank">{props.icp}</Typography.Link>
-            </Space>
-            <Space>
-              <Typography.Text type="secondary">在线: {total} 人 </Typography.Text>
-              <Typography.Text type="secondary">成员: {list.filter(u => u.startsWith('user:')).length} 人</Typography.Text>
-              <Typography.Text type="secondary">访客: {list.filter(u => u.startsWith('token:')).length} 人</Typography.Text>
-            </Space>
-          </Flex>
-        </Theme>
+        <Flex direction="vertical" block align="center" valign="middle" gap={[0, 4]}>
+          <span>Using theme <a href={'https://www.npmjs.com/' + props.theme} target="_blank">{props.theme}</a></span>
+          <span>CopyRight@2004-Present <a href="https://www.pjhome.net/" target="_blank">PJBlog</a> All Rights Reserved. <a href="https://beian.miit.gov.cn/" target="_blank">{props.icp}</a></span>
+          <span>
+            在线: {total} 人
+            成员: {list.filter(u => u.startsWith('user:')).length} 人
+            访客: {list.filter(u => u.startsWith('token:')).length} 人
+          </span>
+        </Flex>
       </footer>
     </div>
   </OnlineContext.Provider>

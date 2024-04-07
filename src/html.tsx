@@ -1,4 +1,4 @@
-import { PropsWithChildren, createContext, useContext } from "react";
+import { PropsWithChildren, createContext, useContext, useMemo } from "react";
 import { IHtmlProps, IMetaData } from "./types";
 
 const HTMLMetaDataContext = createContext<IMetaData>(
