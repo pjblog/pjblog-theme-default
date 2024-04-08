@@ -1,6 +1,8 @@
 import styles from './index.module.less';
 import '../reset.css';
+import '../styles.less';
 import axios from 'axios';
+import { Toaster } from 'react-hot-toast';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import { Categories } from '../components/category';
 import { ICategory } from '../types';
@@ -78,6 +80,7 @@ export function Layout(props: PropsWithChildren<{
         </Flex>
       </footer>
     </div>
+    <Toaster />
   </OnlineContext.Provider>
 }
 

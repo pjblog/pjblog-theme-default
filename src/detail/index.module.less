@@ -1,5 +1,5 @@
 .markdown{
-  font-size: 16px;
+  font-size: 15px;
 }
 
 ul.articleInfo{
@@ -11,12 +11,29 @@ ul.articleInfo{
   background-color: #fcfcfc;
   border-radius: 6px;
   li{
-    .info{
-      display: inline-block;
-      width: 60px;
-      // text-align: right;
-      margin-right: 12px;
-      // font-weight: bold;
+    padding: 2px 0;
+    .dinfo{
+      font-size: 12px;
+      .info{
+        display: inline-block;
+        width: 60px;
+        font-size: 13px;
+        // text-align: right;
+        // font-weight: bold;
+      }
+      .item{
+        font-size: 12px;
+        color: #666;
+        a {
+          text-decoration: none;
+          &:link,&:visited{
+            color: #666;
+          }
+          &:hover{
+            color: #0969da;
+          }
+        }
+      }
     }
   }
 }

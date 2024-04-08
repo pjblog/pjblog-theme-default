@@ -1,9 +1,12 @@
 import axios from 'axios';
+import styles from './index.module.less';
 import { PropsWithoutRef, ReactNode, useCallback, useState } from "react";
 import { MdEditor, ToolbarNames } from 'md-editor-rt';
 import 'md-editor-rt/lib/style.css';
-import { Button, Col, Row, Space, message } from "antd";
 import { IComment } from '../../types';
+import { Flex } from '../../components/Flex';
+import toast from 'react-hot-toast';
+const message = toast
 
 const toolbars: ToolbarNames[] = [
   'preview',
@@ -43,7 +46,7 @@ export function CommentPoster(props: PropsWithoutRef<{
   const [content, setContent] = useState(props.content);
 
   const submit = useCallback(() => {
-    if (!content?.length) return message.warning('请输入评论内容');
+    if (!content?.length) return message.error('请输入评论内容');
     setLoading(true);
     if (props.id > 0) {
       updateComment(props.token, props.id, content)
@@ -76,25 +79,21 @@ export function CommentPoster(props: PropsWithoutRef<{
     }
   }, [props.id, props.token, content, props.parent, setLoading, setContent, props.clearable]);
 
-  return <Row gutter={[0, 12]}>
-    <Col span={24}>
-      <MdEditor
-        pageFullscreen={false}
-        preview={false}
-        modelValue={content}
-        onChange={setContent}
-        editorId={'md-editor-' + props.id + '-' + props.parent}
-        toolbars={toolbars}
-        placeholder='请输入评论内容（注意：不要涉及反动言论以及敏感词句）'
-      />
-    </Col>
-    <Col span={24}>
-      <Space>
-        <Button type="primary" onClick={submit} loading={loading}>发表</Button>
-        {props.extra}
-      </Space>
-    </Col>
-  </Row>
+  return <Flex direction="vertical" gap={[0, 8]} style={{ marginBottom: 24 }}>
+    <MdEditor
+      pageFullscreen={false}
+      preview={false}
+      modelValue={content}
+      onChange={setContent}
+      editorId={'md-editor-' + props.id + '-' + props.parent}
+      toolbars={toolbars}
+      placeholder='请输入评论内容（注意：不要涉及反动言论以及敏感词句）'
+    />
+    <Flex valign="middle" gap={8}>
+      <button className={styles.btn} disabled={loading} onClick={submit}>发表</button>
+      {props.extra}
+    </Flex>
+  </Flex>
 }
 
 function addComment(token: string, content: string, parent: number) {

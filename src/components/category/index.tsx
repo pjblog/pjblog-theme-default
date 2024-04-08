@@ -2,6 +2,7 @@ import styles from './index.module.less';
 import classnames from 'classnames';
 import { ICategory } from "../../types";
 import { PropsWithoutRef, useMemo } from 'react';
+import { Link } from '../link';
 
 export function Categories(props: {
   value: ICategory[],
@@ -26,8 +27,8 @@ function Category(props: PropsWithoutRef<ICategory & {
     return props.link === props.url;
   }, [props.outable, props.id, props.current, props.link, props.url])
   return <li>
-    <a href={props.link} className={classnames({
+    <Link href={props.link} className={classnames({
       [styles.active]: active,
-    })}>{props.name}</a>
+    })}>{props.name}</Link>
   </li>
 }

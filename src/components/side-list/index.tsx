@@ -3,6 +3,7 @@ import { PropsWithoutRef } from "react";
 import { ISideMedia } from "../../types";
 import { Side } from "../side";
 import { Typography } from "antd";
+import { Link } from '../link';
 
 export function SideList(props: PropsWithoutRef<{
   value: ISideMedia[],
@@ -13,7 +14,7 @@ export function SideList(props: PropsWithoutRef<{
       {
         props.value.map(item => {
           return <li key={item.token}>
-            <a type="secondary" href={'/' + item.token}>{item.title}</a>
+            <Link type="secondary" href={'/' + item.token}>{item.title}</Link>
           </li>
         })
       }

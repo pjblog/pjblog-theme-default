@@ -3,13 +3,15 @@ import styles from './index.module.less';
 import classnames from 'classnames';
 import { PropsWithoutRef, useCallback, useEffect, useMemo, useState } from "react"
 import { IComment } from "../../types"
-import { Avatar, Button, Col, Divider, Row, Space, Typography, message, Popconfirm } from "antd"
 import { Flex } from "../../components/Flex"
 import { MdPreview } from 'md-editor-rt';
 import { CommentPoster, transformResponse } from "./post"
 import axios from "axios"
-import { Theme } from "../../components/theme"
 import { useMe } from "../../utils";
+import { Avatar } from "../../components/avatar";
+import { Link } from "../../components/link";
+import toast from 'react-hot-toast';
+const message = toast
 
 type IUpdate = (index: number, value: string) => void;
 type IDelete = (index: number) => void;
@@ -64,22 +66,21 @@ export function CommentList(props: PropsWithoutRef<{
     }
   }, [comments]);
   useEffect(() => setComments(props.value), [props.value]);
-  return <Row gutter={[0, 12]}>
+  return <Flex direction="vertical" gap={[0, 12]}>
     {comments.map((comment, index) => {
-      return <Col span={24} key={comment.id}>
-        <Comment
-          value={comment}
-          token={props.token}
-          size={props.size}
-          updateCallback={update}
-          index={index}
-          deleteCallback={delOne}
-          updateChildren={props.updateDeletion}
-          updateDeletion={updateChildrenDelete}
-        />
-      </Col>
+      return <Comment
+        key={comment.id}
+        value={comment}
+        token={props.token}
+        size={props.size}
+        updateCallback={update}
+        index={index}
+        deleteCallback={delOne}
+        updateChildren={props.updateDeletion}
+        updateDeletion={updateChildrenDelete}
+      />
     })}
-  </Row>
+  </Flex>
 }
 
 function Comment(props: PropsWithoutRef<{
@@ -114,16 +115,14 @@ function Comment(props: PropsWithoutRef<{
   }, [props.token, page, props.value.id, comments, total])
 
   useEffect(() => setTotal(props.value.children), [props.value.children]);
-  return <Flex block gap={12}>
+  return <Flex block gap={12} className={styles.comment}>
     <Avatar src={props.value.user.avatar} size={48} shape="square" />
     <Flex span={1} direction="vertical">
-      <Theme>
-        <Space>
-          <Typography.Text>{props.value.user.nickname}</Typography.Text>
-          <Typography.Text type="secondary">发表于 {dayjs(props.value.gmtc).format('YYYY-MM-DD HH:mm:ss')}</Typography.Text>
-          <Typography.Text type="secondary">编辑于 {dayjs(props.value.gmtm).format('YYYY-MM-DD HH:mm:ss')}</Typography.Text>
-        </Space>
-      </Theme>
+      <Flex gap={8} className={styles.uinfo}>
+        <span className={styles.nickname}>{props.value.user.nickname}</span>
+        <span className={styles.time}>发表于 {dayjs(props.value.gmtc).format('YYYY-MM-DD HH:mm:ss')}</span>
+        <span className={styles.time}>编辑于 {dayjs(props.value.gmtm).format('YYYY-MM-DD HH:mm:ss')}</span>
+      </Flex>
       {
         updating
           ? <div className={classnames(styles.next, styles.editing)}>
@@ -132,7 +131,7 @@ function Comment(props: PropsWithoutRef<{
               parent={props.value.parent}
               id={props.value.id}
               content={props.value.content}
-              extra={<Button type="primary" danger onClick={() => setUpdating(false)}>取消</Button>}
+              extra={<button className={styles.btn} onClick={() => setUpdating(false)}>取消</button>}
               onUpdate={(type, comment: string) => {
                 setUpdating(false);
                 if (type === 'update') {
@@ -145,71 +144,51 @@ function Comment(props: PropsWithoutRef<{
             <MdPreview editorId={'md-preview-' + props.value.id} modelValue={props.value.content} />
           </div>
       }
-      <Theme>
-        <div className={classnames(styles.next, styles.info)}>
-          <Typography.Text type="secondary">此评论下共有 <strong>{total}</strong> 条子评论</Typography.Text>
-          {more && comments.length === 0 && <>
-            <Divider type="vertical" />
-            <Typography.Link onClick={get}>加载</Typography.Link>
-          </>}
-          {!open && <>
-            <Divider type="vertical" />
-            <Typography.Link onClick={() => setOpen(true)}>回复</Typography.Link>
-          </>}
-          {me.account === props.value.user.account && !updating && <>
-            <Divider type="vertical" />
-            <Typography.Link onClick={() => setUpdating(true)}>编辑</Typography.Link>
-          </>}
-          {me.account === props.value.user.account && !updating && <>
-            <Divider type="vertical" />
-            <DeleteComment
-              token={props.token}
-              id={props.value.id}
-              onDelete={() => {
-                props.deleteCallback(props.index);
-                if (typeof props.updateChildren === 'function') {
-                  props.updateChildren();
-                }
-              }}
-            />
-          </>}
-        </div>
-      </Theme>
+      <div className={classnames(styles.next, styles.info)}>
+        <span>此评论下共有 <strong>{total}</strong> 条子评论</span>
+        {more && comments.length === 0 && <Link onClick={get}>加载</Link>}
+        {!open && <Link onClick={() => setOpen(true)}>回复</Link>}
+        {me.account === props.value.user.account && !updating && <Link onClick={() => setUpdating(true)}>编辑</Link>}
+        {me.account === props.value.user.account && !updating && <DeleteComment
+          token={props.token}
+          id={props.value.id}
+          onDelete={() => {
+            props.deleteCallback(props.index);
+            if (typeof props.updateChildren === 'function') {
+              props.updateChildren();
+            }
+          }}
+        />}
+      </div>
 
       <div className={classnames(styles.next, styles.hide, styles.list)}>
-        <Row gutter={[0, 12]}>
-          {open && <Col span={24}>
-            <CommentPoster
-              token={props.token}
-              parent={props.value.id}
-              id={0}
-              extra={<Button type="primary" danger onClick={() => setOpen(false)}>取消</Button>}
-              onUpdate={(type, comment) => {
-                setOpen(false);
-                if (type === 'add') {
-                  let _comments = [
-                    comment,
-                    ...comments
-                  ];
-                  if (_comments.length > page * props.size) {
-                    _comments = _comments.slice(0, page * props.size);
-                  }
-                  setComments(_comments)
-                  setTotal(total + 1);
-                }
-              }}
-            />
-          </Col>}
-          <Col span={24}>
-            <CommentList
-              value={comments}
-              token={props.token}
-              size={props.size}
-              updateDeletion={() => props.updateDeletion(props.value.id)}
-            />
-            {!!comments.length && more && <Button type="dashed" block onClick={get}>更多</Button>}
-          </Col>
-        </Row>
+        {open && <CommentPoster
+          token={props.token}
+          parent={props.value.id}
+          id={0}
+          extra={<button className={styles.btn} onClick={() => setOpen(false)}>取消</button>}
+          onUpdate={(type, comment) => {
+            setOpen(false);
+            if (type === 'add') {
+              let _comments = [
+                comment,
+                ...comments
+              ];
+              if (_comments.length > page * props.size) {
+                _comments = _comments.slice(0, page * props.size);
+              }
+              setComments(_comments)
+              setTotal(total + 1);
+            }
+          }}
+        />}
+        <CommentList
+          value={comments}
+          token={props.token}
+          size={props.size}
+          updateDeletion={() => props.updateDeletion(props.value.id)}
+        />
+        {!!comments.length && more && <button className={styles.more} onClick={get}>更多</button>}
       </div>
     </Flex>
   </Flex>
@@ -222,20 +201,14 @@ function DeleteComment(props: PropsWithoutRef<{
 }>) {
   const [loading, setLoading] = useState(false);
   const submit = useCallback(() => {
-    setLoading(true)
-    axios.delete('/-/media/' + props.token + '/comment/' + props.id)
-      .then(props.onDelete)
-      .catch(e => message.error(e.message))
-      .finally(() => setLoading(false));
+    if (loading) return;
+    if (window.confirm('删除行为将删除这条评论以及此评论下的所有回复，确定要删除此评论？')) {
+      setLoading(true)
+      axios.delete('/-/media/' + props.token + '/comment/' + props.id)
+        .then(props.onDelete)
+        .catch(e => message.error(e.message))
+        .finally(() => setLoading(false));
+    }
   }, [props.token, props.id, loading, props.onDelete])
-  return <Popconfirm
-    title="警告"
-    description="删除行为将删除这条评论以及此评论下的所有回复，确定要删除此评论？"
-    onConfirm={submit}
-    okText="删除"
-    cancelText="取消"
-  >
-    <Typography.Link disabled={loading}>删除</Typography.Link>
-  </Popconfirm>
-
+  return <Link onClick={submit}>删除</Link>
 }

@@ -251,3 +251,11 @@ mark {
   padding: 0.2em;
   background-color: #feffe6;
 }
+.sidebar{
+  width: 300px;
+  overflow: hidden;
+}
+
+.channel{
+  margin-bottom: 24px;
+}

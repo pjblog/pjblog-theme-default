@@ -22,12 +22,55 @@
     background-color: #fafafa;
     padding: 2px 8px;
     border-radius: 2px;
+    font-size: 12px;
+    color: #666;
     strong{
       color: #000;
       font-weight: normal;
+    }
+    a{
+      margin-left: 8px;
+      &:link,&:visited{
+        color: #666;
+      }
+      &:hover{
+        color: #000;
+      }
     }
   }
   &.list{
     margin-top: 20px;
   }
+}
+
+.comment{
+  .uinfo{
+    font-size: 12px;
+    .nickname,.time{
+      font-size: 12px;
+    }
+    .time{
+      color: #999;
+    }
+  }
+  .more{
+    border: 1px dashed #eee;
+    padding: 8px 12px;
+    width: 100%;
+    font-size: 12px;
+    background-color: transparent;
+    color: #444;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+}
+
+.btn{
+  border: 1px solid #eee;
+  padding: 8px 12px;
+  font-size: 12px;
+  background-color: transparent;
+  color: #444;
+  cursor: pointer;
+  border-radius: 3px;
 }

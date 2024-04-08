@@ -2,8 +2,9 @@ import styles from './index.module.less';
 import dayjs from 'dayjs';
 import { PropsWithChildren, PropsWithoutRef } from "react";
 import { IArticle, IMedia } from "../types";
-import { Tag, Typography, Space, Avatar } from "antd";
-import { Theme } from '../components/theme';
+import { Flex } from '../components/Flex';
+import { Avatar } from '../components/avatar';
+import { Link } from '../components/link';
 
 export function ArticleInfo(props: PropsWithoutRef<{
   media: IMedia,
@@ -12,62 +13,41 @@ export function ArticleInfo(props: PropsWithoutRef<{
   return <ul className={styles.articleInfo}>
     <li>
       <Info title='作者'>
-        <Space>
+        <Flex valign="middle" gap={4}>
           <Avatar src={props.media.user.avatar} size={18} />
-          <Typography.Text type="secondary">{props.media.user.nickname}</Typography.Text>
-        </Space>
+          <span>{props.media.user.nickname}</span>
+        </Flex>
       </Info>
     </li>
     <li>
-      <Info title='浏览量'>
-        <Typography.Text type="secondary">{props.media.readCount}次</Typography.Text>
-      </Info>
+      <Info title='浏览量'>{props.media.readCount}次</Info>
     </li>
     <li>
       <Info title='分类'>
-        <Typography.Link href={'/?category=' + props.media.category.id}>
+        <Link href={'/?category=' + props.media.category.id}>
           {props.media.category.name}
-        </Typography.Link>
+        </Link>
       </Info>
     </li>
     <li>
       <Info title='标签'>
-        <Space>
-          {
-            props.article.tags.map(tag => {
-              return <Typography.Link key={tag.id}>
-                {tag.name}
-              </Typography.Link>
-            })
-          }
-        </Space>
-      </Info>
-    </li>
-    {/* <li>
-      <Info title='MD5'>
-        <Tag>{props.article.md5}</Tag>
-      </Info>
-    </li> */}
-    <li>
-      <Info title='发表时间'>
-        <Typography.Text type="secondary">
-          {dayjs(props.media.gmtc).format('YYYY-MM-DD HH:mm:ss')}
-        </Typography.Text>
+        <Flex valign="middle" gap={8}>
+          {props.article.tags.map(tag => <Link key={tag.id}>{tag.name}</Link>)}
+        </Flex>
       </Info>
     </li>
     <li>
-      <Info title='更新时间'>
-        <Typography.Text type="secondary">
-          {dayjs(props.media.gmtm).format('YYYY-MM-DD HH:mm:ss')}
-        </Typography.Text>
-      </Info>
+      <Info title='发表时间'>{dayjs(props.media.gmtc).format('YYYY-MM-DD HH:mm:ss')}</Info>
+    </li>
+    <li>
+      <Info title='更新时间'>{dayjs(props.media.gmtm).format('YYYY-MM-DD HH:mm:ss')}</Info>
     </li>
   </ul>
 }
 
 function Info(props: PropsWithChildren<{ title: string }>) {
-  return <>
-    <Typography.Text className={styles.info}>{props.title}</Typography.Text>
-    <Theme>{props.children}</Theme>
-  </>
+  return <Flex block valign="middle" gap={8} className={styles.dinfo}>
+    <span className={styles.info}>{props.title}</span>
+    <div className={styles.item}>{props.children}</div>
+  </Flex>
 }

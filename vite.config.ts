@@ -30,6 +30,7 @@ export default defineConfig({
                   html: resolve('src/html.tsx'),
                   home: resolve('src/home/index.tsx'),
                   detail: resolve('src/detail/index.tsx'),
+                  archive: resolve('src/archive/index.tsx'),
                 }
               }
             },
@@ -46,6 +47,7 @@ export default defineConfig({
                 input: {
                   home: resolve('src/home/client.tsx'),
                   detail: resolve('src/detail/client.tsx'),
+                  archive: resolve('src/archive/client.tsx'),
                 }
               }
             }

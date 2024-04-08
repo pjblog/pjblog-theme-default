@@ -44,7 +44,7 @@ export default function (props: PropsWithoutRef<IHomePageProps>) {
           }}
         />
       </Flex>
-      <div className={styles.sidebar}>
+      <div className="sidebar">
         <User value={props.me} url={props.location.url} />
         <SideList value={props.hots} title="热门文章" />
         <SideList value={props.latests} title="最新文章" />

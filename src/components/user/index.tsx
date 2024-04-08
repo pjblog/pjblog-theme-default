@@ -1,5 +1,6 @@
 
 import axios from 'axios';
+import toast from 'react-hot-toast';
 import styles from './index.module.less';
 import { IMe } from "@pjblog/blog";
 import { PropsWithoutRef } from "react";
@@ -9,26 +10,23 @@ import { useState } from 'react';
 import { Side } from '../side';
 import { Flex } from '../Flex';
 import { Avatar } from '../avatar';
-import { ToastProvider, useToasts } from 'react-toast-notifications';
+import { Link } from '../link';
 
 
 export function User(props: PropsWithoutRef<{ value: IMe, url: string }>) {
-  return <ToastProvider>
-    <Side title="用户">
-      {!!props.value.account ? <Logined {...props.value} /> : <UnLogin url={props.url} />}
-    </Side>
-  </ToastProvider>
+  return <Side title="用户">
+    {!!props.value.account ? <Logined {...props.value} /> : <UnLogin url={props.url} />}
+  </Side>
 }
 
 function Logined(props: PropsWithoutRef<IMe>) {
   const [loading, setLoading] = useState(false);
-  const { addToast } = useToasts();
   const logout = useCallback(() => {
     if (loading) return;
     setLoading(true);
     axios.delete('/-/user/logout')
       .then(() => window.location.reload())
-      .catch(e => addToast(e.message, { appearance: 'error', autoDismiss: true }))
+      .catch(e => toast.error(e.message))
       .finally(() => setLoading(false));
   }, [loading])
   return <div>
@@ -44,10 +42,10 @@ function Logined(props: PropsWithoutRef<IMe>) {
       </Flex>
     </Flex>
     <ul className={styles.list}>
-      {props.admin && <li><a href="/control">后台管理</a></li>}
-      <li><a href="/control/profile">修改资料</a></li>
-      <li><a href="/control/password">修改密码</a></li>
-      <li><a href="javascript:void(0);" onClick={logout}>退出登录</a></li>
+      {props.admin && <li><Link href="/control">后台管理</Link></li>}
+      <li><Link href="/control/profile">修改资料</Link></li>
+      <li><Link href="/control/password">修改密码</Link></li>
+      <li><Link onClick={logout}>退出登录</Link></li>
     </ul>
   </div>
 }
@@ -56,7 +54,7 @@ function UnLogin(props: PropsWithoutRef<{ url: string }>) {
   const loginUrl = useMemo(() => `/control/login?redirect_url=${encodeURIComponent(props.url)}`, [props.url]);
   const registerUrl = useMemo(() => `/control/register?redirect_url=${encodeURIComponent(props.url)}`, [props.url]);
   return <ul className={styles.list}>
-    <li><a href={loginUrl}>登录</a></li>
-    <li><a href={registerUrl}>注册</a></li>
+    <li><Link href={loginUrl}>登录</Link></li>
+    <li><Link href={registerUrl}>注册</Link></li>
   </ul>
 }

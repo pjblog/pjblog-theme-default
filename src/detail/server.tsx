@@ -9,7 +9,6 @@ import { renderToString } from 'react-dom/server';
 import { Context } from '@zille/core';
 import { BlogMetaDataProvider } from "../metadata.ts";
 import { IArticle, IDetailPageProps, IHomePageProps, IHtmlProps } from "../types.ts";
-import { createCache, extractStyle, StyleProvider } from '@ant-design/cssinjs';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
@@ -125,19 +124,13 @@ export default class MyHomePage extends DetailPgae {
   public async render(data: IHomePageProps) {
     const metadata = this.metadata.get();
     const { Detail, Html, client, css } = await this.getFiles();
-    const cache = createCache();
-    const child = !this.context.vite
-      ? createElement(StyleProvider, { cache }, createElement(Detail, data))
-      : createElement(Detail, data)
-    const html = renderToString(createElement(Html, {
+    return renderToString(createElement(Html, {
       ...metadata,
       state: data,
       dev: !!this.context.vite,
       script: client,
       css: css,
-    } satisfies IHtmlProps, child));
-    const styleText = extractStyle(cache);
-    return html + styleText;
+    } satisfies IHtmlProps, createElement(Detail, data)));
   }
 
   private async getFiles() {
@@ -159,7 +152,6 @@ export default class MyHomePage extends DetailPgae {
         import(resolve(build, manifest_server[this.pro_html].file)),
       ])
       const css: string[] = (manifest_client[this.pro_client]?.css || []).map(_ => this.transformAssets(_));
-      // css.unshift(this.transformAssets('assets/antd.min.css'));
       if (manifest_client[this.pro_client].imports?.length) {
         for (let i = 0; i < manifest_client[this.pro_client].imports.length; i++) {
           const child = manifest_client[this.pro_client].imports[i];

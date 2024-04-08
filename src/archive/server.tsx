@@ -8,7 +8,6 @@ import { createElement } from 'react';
 import { renderToString } from 'react-dom/server'
 import { BlogMetaDataProvider } from "../metadata.ts";
 import { IArchivePageProps, IHtmlProps } from "../types.ts";
-import { createCache, extractStyle, StyleProvider } from '@ant-design/cssinjs';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
@@ -101,19 +100,13 @@ export default class MyHomePage extends ArchivePage {
   public async render(data: IArchivePageProps) {
     const metadata = this.metadata.get();
     const { Home, Html, client, css } = await this.getFiles();
-    const cache = createCache();
-    const child = !this.context.vite
-      ? createElement(StyleProvider, { cache }, createElement(Home, data))
-      : createElement(Home, data)
-    const html = renderToString(createElement(Html, {
+    return renderToString(createElement(Html, {
       ...metadata,
       state: data,
       dev: !!this.context.vite,
       script: client,
       css: css,
-    } satisfies IHtmlProps, child));
-    const styleText = extractStyle(cache);
-    return html + styleText;
+    } satisfies IHtmlProps, createElement(Home, data)));
   }
 
   private async getFiles() {

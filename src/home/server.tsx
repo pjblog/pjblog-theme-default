@@ -117,7 +117,6 @@ export default class MyHomePage extends HomePage {
         import(resolve(build, manifest_server[this.pro_html].file)),
       ])
       const css: string[] = (manifest_client[this.pro_client]?.css || []).map(_ => this.transformAssets(_));
-      // css.unshift(this.transformAssets('assets/antd.min.css'));
       if (manifest_client[this.pro_client].imports?.length) {
         for (let i = 0; i < manifest_client[this.pro_client].imports.length; i++) {
           const child = manifest_client[this.pro_client].imports[i];
