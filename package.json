@@ -1,6 +1,6 @@
 {
   "name": "pjblog-theme-default",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "PJBlog 默认主题",
   "main": "./build/index.js",
   "type": "module",
@@ -28,7 +28,9 @@
     "koa-send": "^5.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "vite": "^4.5.3"
+    "vite": "^4.5.3",
+    "classnames": "^2.5.1",
+    "dayjs": "^1.11.10"
   },
   "devDependencies": {
     "@fingerprintjs/fingerprintjs": "^4.2.2",
@@ -41,8 +43,6 @@
     "@typescript-eslint/parser": "^6.21.0",
     "@vitejs/plugin-react": "^4.2.1",
     "axios": "^1.6.8",
-    "classnames": "^2.5.1",
-    "dayjs": "^1.11.10",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
