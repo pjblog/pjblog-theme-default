@@ -1,6 +1,6 @@
 {
   "name": "pjblog-theme-default",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "PJBlog 默认主题",
   "main": "./build/index.js",
   "type": "module",
@@ -16,8 +16,8 @@
     "build:server": "rm -rf ./build && vite build --ssr"
   },
   "dependencies": {
-    "@pjblog/blog": "^2.3.36",
-    "@pjblog/vite-middleware": "^2.3.5",
+    "@pjblog/blog": "^2.3.38",
+    "@pjblog/vite-middleware": "^2.3.8",
     "@zille/application": "^1.1.2",
     "@zille/core": "^1.1.2",
     "@zille/http": "^1.1.12",
