@@ -9,9 +9,10 @@ import { ICategory } from '../types';
 import { Flex } from '../components/Flex';
 
 const finger: { value?: string } = {};
-const OnlineContext = createContext<{ total: number, list: string[] }>({
-  total: 0,
-  list: []
+const OnlineContext = createContext<Record<'onlines' | 'members' | 'visitors', number>>({
+  onlines: 0,
+  members: 0,
+  visitors: 0,
 })
 if (typeof window !== 'undefined') {
   import('@fingerprintjs/fingerprintjs')
@@ -43,20 +44,22 @@ export function Layout(props: PropsWithChildren<{
   icp: string,
   theme: string,
 }>) {
-  const [total, setTotal] = useState(0);
-  const [list, setList] = useState<string[]>([]);
+  const [onlines, setOnlines] = useState(0);
+  const [members, setMembers] = useState(0);
+  const [visitors, setVisitors] = useState(0);
   useEffect(() => {
     const eventSource = new EventSource('/-/online');
     eventSource.onmessage = event => {
       try {
-        const { online, list } = JSON.parse(event.data);
-        setTotal(online);
-        setList(list);
+        const { onlines, members, visitors } = JSON.parse(event.data);
+        setOnlines(onlines);
+        setMembers(members);
+        setVisitors(visitors);
       } catch (e) { }
     }
     return () => eventSource.close();
   }, [])
-  return <OnlineContext.Provider value={{ total, list }}>
+  return <OnlineContext.Provider value={{ onlines, members, visitors }}>
     <div className={styles.container}>
       <div className={styles.layout}>
         <div className={styles.header}>
@@ -73,9 +76,9 @@ export function Layout(props: PropsWithChildren<{
           <span>Using theme <a href={'https://www.npmjs.com/' + props.theme} target="_blank">{props.theme}</a></span>
           <span>CopyRight@2004-Present <a href="https://www.pjhome.net/" target="_blank">PJBlog</a> All Rights Reserved. <a href="https://beian.miit.gov.cn/" target="_blank">{props.icp}</a></span>
           <span>
-            在线: {total} 人
-            成员: {list.filter(u => u.startsWith('user:')).length} 人
-            访客: {list.filter(u => u.startsWith('token:')).length} 人
+            在线: {onlines} 人
+            成员: {members} 人
+            访客: {visitors} 人
           </span>
         </Flex>
       </footer>
